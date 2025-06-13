@@ -18,10 +18,19 @@ def load_guide (file_path):
 class Wizard:
 
     def __init__ (self, start_file):
+        #store variables
         self.variables = {}
+
+        #Jinja2 environment for evaluating placeholders {{...}}
         self.env = Environment()
+
+        #load initial guide
         self.current_guide = load_guide(start_file)
+
+        #track current json file being used 
         self.current_file = start_file
+
+        #set first node to start traversal
         self.current_node_id = self.current_guide["_meta"]["entry_point"]
 
     def apply_variables (self, message):
@@ -53,6 +62,9 @@ class Wizard:
             self.current_node_id = next_node["entryPoint"]
 
     def exit_text (self, prompt):
+        """
+        Prompt user to input text. Exit wizard if user cancels (Ctrl +C)
+        """
         answer = questionary.text(prompt).ask()
         if answer is None:
             print("Exiting GenPipes wizard.")
@@ -60,6 +72,9 @@ class Wizard:
         return answer
     
     def exit_confirm(self, prompt):
+        """
+        Prompt user to answer Y/n question. Exit wizard if user cancels (Ctrl +C)
+        """
         answer = questionary.confirm(prompt).ask()
         if answer is None:
             print("Exiting GenPipes wizard.")
@@ -67,6 +82,9 @@ class Wizard:
         return answer
     
     def exit_select (self, prompt, choices):
+        """
+        Prompt user to select from list. Exit wizard if user cancels (Ctrl +C)
+        """
         answer = questionary.select(prompt, choices=choices).ask()
         if answer is None:
             print("Exiting GenPipes wizard.")
