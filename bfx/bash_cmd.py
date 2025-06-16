@@ -107,7 +107,7 @@ def cp(
         [source],
         [target],
         command="""\
-cp {rec}{upd}'{source}' {dest}""".format(
+cp {rec}{upd}{source} {dest}""".format(
             source=source,
             dest=target,
             rec="-r " if recursive else "",
