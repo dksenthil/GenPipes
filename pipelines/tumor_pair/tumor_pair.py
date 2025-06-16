@@ -4264,7 +4264,7 @@ echo -e "{normal_name}\\t{tumor_name}" \\
                                     samtools.view(input_normal, input_normal_tmp_chr, f"-b -h -L {bed} -@ {config.param('vardict_paired', 'samtools_threads')}"),
                                     samtools.index(input_normal_tmp_chr),
                                     samtools.view(input_tumor, input_tumor_tmp_chr, f"-b -h -L {bed} -@ {config.param('vardict_paired', 'samtools_threads')}"),
-                                    samtools.index(input_normal_tmp_chr),
+                                    samtools.index(input_tumor_tmp_chr),
                                     pipe_jobs(
                                         [
                                             vardict.paired_java(
