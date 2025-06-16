@@ -88,7 +88,6 @@ class Wizard:
         answer = questionary.select(prompt, choices=choices).ask()
         if answer is None:
             print("Exiting GenPipes wizard.")
-            
             sys.exit(0)
         return answer
 

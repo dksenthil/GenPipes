@@ -71,11 +71,19 @@ class Wizard:
         return answer.strip()
     
     def exit_confirm(self, prompt):
-       return questionary.select(prompt,choices=["Yes", "No", "Back"]).ask()
+        answer = questionary.select(prompt, choices=["Yes", "No", "Back"]).ask()
+        if answer is None:
+            print("\nExiting GenPipes wizard.")
+            sys.exit(0)
+        return answer
     
     def exit_select (self, prompt, choices):
         extended_choices = choices + ["Back"]
-        return questionary.select(prompt, choices=extended_choices).ask()
+        answer = questionary.select(prompt, choices=extended_choices).ask()
+        if answer is None:
+            print("\nExiting GenPipes wizard.")
+            sys.exit(0)
+        return answer
     
 
     def tree_traversal(self):
