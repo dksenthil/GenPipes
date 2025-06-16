@@ -115,9 +115,9 @@ class Wizard:
             elif node_type == "selection":
                 #choices
                 if "choices" in node:
-                    labels = [c["label"] for c in node["choices"]]
+                    labels = [current_choice["label"] for current_choice in node["choices"]]
                     choice = self.exit_select(self.apply_variables(node["question"]), labels)
-                    next_node = next(c for c in node["choices"] if c["label"] == choice)
+                    next_node = next(current_choice for current_choice in node["choices"] if current_choice["label"] == choice)
                     self.goto(next_node["node"])
 
                 #choices_cases
@@ -215,7 +215,6 @@ class Wizard:
             pair_filename += ".txt"
         self.variables["pair_file_name"] = pair_filename
 
-
         path_custom_ini = self.variables.get("raw_path_custom_ini", "").strip()
         if path_custom_ini and not path_custom_ini.endswith(".ini"):
             path_custom_ini += ".ini"
@@ -294,9 +293,9 @@ class Wizard:
 
         for part in step_range.split(','):
             part = part.strip()
-            if '-' in part:
+            if "-" in part:
                 try:
-                    start, end = map(int, part.split('-', 1))
+                    start, end = map(int, part.split("-", 1))
                 except ValueError:
                     print(f"[ERROR] '{part}' not in the correct step range format.")
                     return False
