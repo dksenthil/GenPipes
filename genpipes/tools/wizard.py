@@ -168,7 +168,7 @@ class Wizard:
                 if value in cases:
                     self.goto(cases[value]["node"])
                 else:
-                    print(f"[ERROR] No matching case for {variable} ='{value}' at node {node['id']}")
+                    print(f"ERROR! No matching case for {variable} ='{value}' at node {node['id']}")
                     sys.exit(1)
 
             #Input: Prompt the user for input and store it as a variable 
@@ -181,7 +181,7 @@ class Wizard:
 
                     if variable == "raw_readset_filename":
                         if not input.strip():
-                            print("[ERROR] You must enter a readset filename. Please try again.")
+                            print("ERROR! You must enter a readset filename. Please try again.")
                             continue
 
                     if variable == "step_range":
@@ -193,7 +193,7 @@ class Wizard:
                 self.goto(node["next"])
 
             else:
-                print(f"[ERROR] Unknown node type: {node_type} in {self.current_file}")
+                print(f"ERROR! Unknown node type: {node_type} in {self.current_file}")
                 sys.exit(1)
     
     def fix_filenames(self):
@@ -297,19 +297,19 @@ class Wizard:
                 try:
                     start, end = map(int, part.split("-", 1))
                 except ValueError:
-                    print(f"[ERROR] '{part}' not in the correct step range format.")
+                    print(f"ERROR! '{part}' not in the correct step range format.")
                     return False
                 if start > end or start < valid_start or end > valid_end:
-                    print(f"[ERROR] Range '{part}' is out of bounds.\nPlease enter a valid step range within these bounds: ({valid_start}-{valid_end}).")
+                    print(f"ERROR! Range '{part}' is out of bounds.\nPlease enter a valid step range within these bounds: ({valid_start}-{valid_end}).")
                     return False
             else:
                 try:
                     step = int(part)
                 except ValueError:
-                    print(f"[ERROR] '{part}' is not a number.")
+                    print(f"ERROR! '{part}' is not a number.")
                     return False
                 if step < valid_start or step > valid_end:
-                    print(f"[ERROR] Step '{step}' is out of bounds.\nPlease enter a valid step range within these bounds: ({valid_start}-{valid_end}).")
+                    print(f"ERROR! Step '{step}' is out of bounds.\nPlease enter a valid step range within these bounds: ({valid_start}-{valid_end}).")
                     return False
 
         return True
