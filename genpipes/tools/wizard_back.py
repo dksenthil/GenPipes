@@ -370,6 +370,7 @@ class Wizard:
 def main():
     print("\nWelcome to the GenPipes Wizard!")
     print("This tool will help you select the appropriate deployment method, pipeline, protocol, and/or construct the command to run GenPipes.")
+    print("Press Ctrl+C at any time to exit the wizard.")
     print ("Let’s begin!\n")
     start_json_file = "general_guide.json"
     start = Wizard(start_json_file)
