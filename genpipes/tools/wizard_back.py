@@ -18,11 +18,22 @@ def load_guide (file_path):
 class Wizard:
 
     def __init__ (self, start_file):
+        #store variables
         self.variables = {}
+
+        #Jinja2 environment for evaluating placeholders {{...}}
         self.env = Environment()
+
+        #load initial guide
         self.current_guide = load_guide(start_file)
+
+        #track current json file being used 
         self.current_file = start_file
+
+        #set first node to start traversal
         self.current_node_id = self.current_guide["_meta"]["entry_point"]
+
+        #keep track of node id's visited 
         self.history = []
 
     def apply_variables (self, message):
@@ -44,7 +55,10 @@ class Wizard:
         """
         Move to the next node in the tree 
         """
-        self.history.append((self.current_file, self.current_node_id))
+        current = self.find_node(self.current_node_id)
+        if current.get("type") in ("input", "confirm", "selection"):
+            self.history.append((self.current_file, self.current_node_id))
+
         # when next node is in the current JSON file
         if isinstance(next_node, str):
             self.current_node_id = next_node
@@ -55,15 +69,29 @@ class Wizard:
             self.current_node_id = next_node["entryPoint"]
 
     def go_back(self):
-        if self.history:
+        """
+        Go back to previous question
+        """
+        while self.history:
             self.current_file, self.current_node_id = self.history.pop()
             self.current_guide = load_guide(self.current_file)
-            return True
-        else:
-            print("[INFO] Already at the beginning. Cannot go back further.")
-            return False
+            node = self.find_node(self.current_node_id)
+
+            # Clear value of variable if type is input or set_variable 
+            if node.get("type") in ("input", "set_variable") and "variable" in node:
+                self.variables.pop(node["variable"], None)
+
+            if node.get("type") != "message":
+                return True
+
+        print("[INFO] Already at the beginning. Cannot go back further.")
+        return False
+        
 
     def exit_text (self, prompt):
+        """
+        Prompt user to input text. Exit wizard if user cancels (Ctrl +C)
+        """
         answer = questionary.text(f"{prompt} (or type 'back' to go back)").ask()
         if answer is None:
             print("Exiting GenPipes wizard.")
@@ -71,6 +99,9 @@ class Wizard:
         return answer.strip()
     
     def exit_confirm(self, prompt):
+        """
+        Prompt user to answer Y/n question. Exit wizard if user cancels (Ctrl +C)
+        """
         answer = questionary.select(prompt, choices=["Yes", "No", "Back"]).ask()
         if answer is None:
             print("\nExiting GenPipes wizard.")
@@ -78,6 +109,9 @@ class Wizard:
         return answer
     
     def exit_select (self, prompt, choices):
+        """
+        Prompt user to select from list. Exit wizard if user cancels (Ctrl +C)
+        """
         extended_choices = choices + ["Back"]
         answer = questionary.select(prompt, choices=extended_choices).ask()
         if answer is None:
@@ -100,27 +134,34 @@ class Wizard:
                 while True:
                     answer = self.exit_confirm(self.apply_variables(node["question"]))
                     if answer == "Back":
-                        if self.go_back(): break
-                        else: continue
+                        if self.go_back():
+                            break   
+                        else:
+                            continue
                     chosen = answer
-                    next_info = next((opt["next"] for opt in node["options"] if opt["label"] == chosen), None)
+                    next_info = next(opt["next"] for opt in node["options"] if opt["label"] == chosen)
                     self.goto(next_info)
                     break
 
             #Selection: single-select question from list 
             elif node_type == "selection":
+                #choices
                 if "choices" in node:
                     labels = [c["label"] for c in node["choices"]]
                     while True:
                         choice = self.exit_select(self.apply_variables(node["question"]), labels)
                         if choice == "Back":
-                            if self.go_back(): break
-                            else: continue
+                            if self.go_back():
+                                break
+                            else: 
+                                continue
+                                
                         next_node = next(c for c in node["choices"] if c["label"] == choice)
                         self.goto(next_node["node"])
                         break
 
-                else:  # choices_cases
+                #choices_cases
+                else:  
                     for case_block in node["choices_cases"]:
                         variable_name, value = next(iter(case_block["when"]["equals"].items()))
                         if self.variables.get(variable_name) == value:
@@ -128,8 +169,10 @@ class Wizard:
                             while True:
                                 choice = self.exit_select(self.apply_variables(node["question"]), labels)
                                 if choice == "Back":
-                                    if self.go_back(): break
-                                    else: continue
+                                    if self.go_back(): 
+                                        break
+                                    else: 
+                                        continue
                                 next_node = next(c for c in case_block["choices"] if c["label"] == choice)
                                 self.goto(next_node["node"])
                                 break
@@ -152,15 +195,14 @@ class Wizard:
                 if variable == "final_command":
                     updated_value = " ".join(updated_value.split())
 
-                #updated_value = self.apply_variables(raw_value)
                 self.variables[variable] = updated_value
                 self.goto(node["next"])
 
             #Message: output message for user, if no next node then end of wizard
             elif node_type == "message":
-                print (self.apply_variables(node["message"]))
+                message = self.apply_variables(node["message"])
+                print(message)
                 next_node = node.get("next")
-                #end of wizard 
                 if not next_node:
                     break
                 self.goto(next_node)
@@ -182,8 +224,10 @@ class Wizard:
                 while True:
                     user_input = self.exit_text(self.apply_variables(node["prompt"]))
                     if user_input.lower() == "back":
-                        if self.go_back(): break
-                        else: continue
+                        if self.go_back(): 
+                            break
+                        else: 
+                            continue
 
                     self.variables[variable] = user_input.strip()
 
