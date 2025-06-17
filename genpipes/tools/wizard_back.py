@@ -341,6 +341,9 @@ class Wizard:
 
         pipeline_data = valid_steps.get(pipeline, {})
         valid_range = pipeline_data.get(protocol, pipeline_data.get("default"))
+        if not valid_range:
+            print(f"ERROR! Please enter a valid step range.")
+            return False
         valid_start, valid_end = valid_range
 
         for part in step_range.split(','):
