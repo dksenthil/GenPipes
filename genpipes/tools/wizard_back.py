@@ -222,18 +222,38 @@ class Wizard:
             elif node_type == "input":
                 variable = node["variable"]
                 while True:
-                    user_input = self.exit_text(self.apply_variables(node["prompt"]))
-                    if user_input.lower() == "back":
+                    input = self.exit_text(self.apply_variables(node["prompt"]))
+                    if input.lower() == "back":
                         if self.go_back(): 
                             break
                         else: 
                             continue
 
-                    self.variables[variable] = user_input.strip()
+                    self.variables[variable] = input.strip()
 
                     if variable == "raw_readset_filename":
-                        if not user_input.strip():
-                            print("ERROR! You must enter a readset filename. Please try again.")
+                        if not input.strip():
+                            print("ERROR! You must enter a readset file name. Please try again.")
+                            continue
+
+                    if variable == "design_file_name":
+                        if not input.strip():
+                            print("ERROR! You must enter a design file name. Please try again.")
+                            continue
+                    
+                    if variable == "pair_file_name":
+                        if not input.strip():
+                            print("ERROR! You must enter a pair file name. Please try again.")
+                            continue
+
+                    if variable == "raw_path_custom_ini":
+                        if not input.strip():
+                            print("ERROR! You must enter a path to the custom ini name. Please try again.")
+                            continue
+                        
+                    if variable == "directory_name":
+                        if not input.strip():
+                            print("ERROR! You must enter a directory name. Please try again.")
                             continue
 
                     if variable == "step_range":

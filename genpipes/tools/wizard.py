@@ -184,6 +184,26 @@ class Wizard:
                             print("ERROR! You must enter a readset filename. Please try again.")
                             continue
 
+                    if variable == "design_file_name":
+                        if not input.strip():
+                            print("ERROR! You must enter a design file name. Please try again.")
+                            continue
+                    
+                    if variable == "pair_file_name":
+                        if not input.strip():
+                            print("ERROR! You must enter a pair file name. Please try again.")
+                            continue
+
+                    if variable == "raw_path_custom_ini":
+                        if not input.strip():
+                            print("ERROR! You must enter a path to the custom ini name. Please try again.")
+                            continue
+                        
+                    if variable == "directory_name":
+                        if not input.strip():
+                            print("ERROR! You must enter a directory name. Please try again.")
+                            continue
+
                     if variable == "step_range":
                         self.variables[variable] = input
                         if not self.valid_step_range():
