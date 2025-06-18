@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+ #!/usr/bin/env python3
 
 import json
 import os
@@ -33,9 +33,6 @@ class Wizard:
         #set first node to start traversal
         self.current_node_id = self.current_guide["_meta"]["entry_point"]
 
-        #keep track of node id's visited 
-        self.history = []
-
     def apply_variables (self, message):
         """
         Fill the placeholder {{...}} in the message with the data from the current variable
@@ -55,10 +52,6 @@ class Wizard:
         """
         Move to the next node in the tree 
         """
-        current = self.find_node(self.current_node_id)
-        if current.get("type") in ("input", "confirm", "selection"):
-            self.history.append((self.current_file, self.current_node_id))
-
         # when next node is in the current JSON file
         if isinstance(next_node, str):
             self.current_node_id = next_node
@@ -68,43 +61,23 @@ class Wizard:
             self.current_guide = load_guide(self.current_file)
             self.current_node_id = next_node["entryPoint"]
 
-    def go_back(self):
-        """
-        Go back to previous question
-        """
-        while self.history:
-            self.current_file, self.current_node_id = self.history.pop()
-            self.current_guide = load_guide(self.current_file)
-            node = self.find_node(self.current_node_id)
-
-            # Clear value of variable if type is input or set_variable 
-            if node.get("type") in ("input", "set_variable") and "variable" in node:
-                self.variables.pop(node["variable"], None)
-
-            if node.get("type") != "message":
-                return True
-
-        print("ERROR! You cannot go back further, you're at the first question.")
-        return False
-        
-
     def exit_text (self, prompt):
         """
         Prompt user to input text. Exit wizard if user cancels (Ctrl +C)
         """
-        answer = questionary.text(f"{prompt} (or type 'back' to go back)").ask()
+        answer = questionary.text(prompt).ask()
         if answer is None:
             print("Exiting GenPipes wizard.")
             sys.exit(0)
-        return answer.strip()
+        return answer
     
     def exit_confirm(self, prompt):
         """
         Prompt user to answer Y/n question. Exit wizard if user cancels (Ctrl +C)
         """
-        answer = questionary.select(prompt, choices=["Yes", "No", "Back"]).ask()
+        answer = questionary.confirm(prompt).ask()
         if answer is None:
-            print("\nExiting GenPipes wizard.")
+            print("Exiting GenPipes wizard.")
             sys.exit(0)
         return answer
     
@@ -112,13 +85,11 @@ class Wizard:
         """
         Prompt user to select from list. Exit wizard if user cancels (Ctrl +C)
         """
-        extended_choices = choices + ["Back"]
-        answer = questionary.select(prompt, choices=extended_choices).ask()
+        answer = questionary.select(prompt, choices=choices).ask()
         if answer is None:
-            print("\nExiting GenPipes wizard.")
+            print("Exiting GenPipes wizard.")
             sys.exit(0)
         return answer
-    
 
     def tree_traversal(self):
         """
@@ -131,52 +102,33 @@ class Wizard:
 
             #Confirm: yes/no questions
             if node_type == "confirm":
-                while True:
-                    answer = self.exit_confirm(self.apply_variables(node["question"]))
-                    if answer == "Back":
-                        if self.go_back():
-                            break   
-                        else:
-                            continue
-                    chosen = answer
-                    next_info = next(opt["next"] for opt in node["options"] if opt["label"] == chosen)
-                    self.goto(next_info)
-                    break
+                answer = self.exit_confirm(self.apply_variables(node["question"]))
+                chosen = "Yes" if answer else "No"
+                next_info = None
+                for option in node["options"]:
+                    if option["label"] == chosen:
+                        next_info = option["next"]
+                        break
+                self.goto(next_info)
 
             #Selection: single-select question from list 
             elif node_type == "selection":
                 #choices
                 if "choices" in node:
-                    labels = [c["label"] for c in node["choices"]]
-                    while True:
-                        choice = self.exit_select(self.apply_variables(node["question"]), labels)
-                        if choice == "Back":
-                            if self.go_back():
-                                break
-                            else: 
-                                continue
-                                
-                        next_node = next(c for c in node["choices"] if c["label"] == choice)
-                        self.goto(next_node["node"])
-                        break
+                    labels = [current_choice["label"] for current_choice in node["choices"]]
+                    choice = self.exit_select(self.apply_variables(node["question"]), labels)
+                    next_node = next(current_choice for current_choice in node["choices"] if current_choice["label"] == choice)
+                    self.goto(next_node["node"])
 
                 #choices_cases
-                else:  
-                    for case_block in node["choices_cases"]:
+                else:
+                    for case_block in node ["choices_cases"]:
                         variable_name, value = next(iter(case_block["when"]["equals"].items()))
                         if self.variables.get(variable_name) == value:
-                            labels = [c["label"] for c in case_block["choices"]]
-                            while True:
-                                choice = self.exit_select(self.apply_variables(node["question"]), labels)
-                                if choice == "Back":
-                                    if self.go_back(): 
-                                        break
-                                    else: 
-                                        continue
-                                next_node = next(c for c in case_block["choices"] if c["label"] == choice)
-                                self.goto(next_node["node"])
-                                break
-                            break
+                            labels = [current_choice["label"] for current_choice in case_block["choices"]]
+                            choice = self.exit_select(self.apply_variables(node["question"]), labels)
+                            next_node = next(current_choice for current_choice in case_block["choices"] if current_choice["label"] == choice)
+                            self.goto(next_node["node"])
 
             #Set_variable: set and store variable 
             elif node_type == "set_variable":
@@ -195,14 +147,15 @@ class Wizard:
                 if variable == "final_command":
                     updated_value = " ".join(updated_value.split())
 
+                #updated_value = self.apply_variables(raw_value)
                 self.variables[variable] = updated_value
                 self.goto(node["next"])
 
             #Message: output message for user, if no next node then end of wizard
             elif node_type == "message":
-                message = self.apply_variables(node["message"])
-                print(message)
+                print (self.apply_variables(node["message"]))
                 next_node = node.get("next")
+                #end of wizard 
                 if not next_node:
                     break
                 self.goto(next_node)
@@ -222,18 +175,13 @@ class Wizard:
             elif node_type == "input":
                 variable = node["variable"]
                 while True:
-                    input = self.exit_text(self.apply_variables(node["prompt"]))
-                    if input.lower() == "back":
-                        if self.go_back(): 
-                            break
-                        else: 
-                            continue
+                    input = self.exit_text(self.apply_variables(node["prompt"])).strip()
 
-                    self.variables[variable] = input.strip()
+                    self.variables[variable] = input
 
                     if variable == "raw_readset_filename":
                         if not input.strip():
-                            print("ERROR! You must enter a readset file name. Please try again.")
+                            print("ERROR! You must enter a readset filename. Please try again.")
                             continue
 
                     if variable == "design_file_name":
@@ -257,11 +205,12 @@ class Wizard:
                             continue
 
                     if variable == "step_range":
+                        self.variables[variable] = input
                         if not self.valid_step_range():
                             continue
-
-                    self.goto(node["next"])
                     break
+                
+                self.goto(node["next"])
 
             else:
                 print(f"ERROR! Unknown node type: {node_type} in {self.current_file}")
@@ -285,7 +234,6 @@ class Wizard:
         if pair_filename and not pair_filename.endswith(".txt"):
             pair_filename += ".txt"
         self.variables["pair_file_name"] = pair_filename
-
 
         path_custom_ini = self.variables.get("raw_path_custom_ini", "").strip()
         if path_custom_ini and not path_custom_ini.endswith(".ini"):
@@ -368,11 +316,11 @@ class Wizard:
 
         for part in step_range.split(','):
             part = part.strip()
-            if '-' in part:
+            if "-" in part:
                 try:
-                    start, end = map(int, part.split('-', 1))
+                    start, end = map(int, part.split("-", 1))
                 except ValueError:
-                    print(f"ERROR!'{part}' not in the correct step range format.")
+                    print(f"ERROR! '{part}' not in the correct step range format.")
                     return False
                 if start > end or start < valid_start or end > valid_end:
                     print(f"ERROR! Range '{part}' is out of bounds.\nPlease enter a valid step range within these bounds: ({valid_start}-{valid_end}).")
