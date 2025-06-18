@@ -87,7 +87,6 @@ class Wizard:
         print("ERROR! You cannot go back further, you're at the first question.")
         return False
         
-
     def exit_text (self, prompt):
         """
         Prompt user to input text. Exit wizard if user cancels (Ctrl +C)
@@ -119,7 +118,6 @@ class Wizard:
             sys.exit(0)
         return answer
     
-
     def tree_traversal(self):
         """
         Traverse through the JSON files to prompt the user questions
@@ -154,8 +152,7 @@ class Wizard:
                             if self.go_back():
                                 break
                             else: 
-                                continue
-                                
+                                continue   
                         next_node = next(current_choice for current_choice in node["choices"] if current_choice["label"] == choice)
                         self.goto(next_node["node"])
                         break
@@ -231,26 +228,23 @@ class Wizard:
 
                     self.variables[variable] = input.strip()
 
+                    #ensure that user doesn't leave input questions empty
                     if variable == "raw_readset_filename":
                         if not input.strip():
                             print("ERROR! You must enter a readset file name. Please try again.")
                             continue
-
                     if variable == "design_file_name":
                         if not input.strip():
                             print("ERROR! You must enter a design file name. Please try again.")
                             continue
-                    
                     if variable == "pair_file_name":
                         if not input.strip():
                             print("ERROR! You must enter a pair file name. Please try again.")
                             continue
-
                     if variable == "raw_path_custom_ini":
                         if not input.strip():
                             print("ERROR! You must enter a path to the custom ini name. Please try again.")
                             continue
-                        
                     if variable == "directory_name":
                         if not input.strip():
                             print("ERROR! You must enter a directory name. Please try again.")
@@ -285,7 +279,6 @@ class Wizard:
         if pair_filename and not pair_filename.endswith(".txt"):
             pair_filename += ".txt"
         self.variables["pair_file_name"] = pair_filename
-
 
         path_custom_ini = self.variables.get("raw_path_custom_ini", "").strip()
         if path_custom_ini and not path_custom_ini.endswith(".ini"):
