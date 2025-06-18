@@ -2701,13 +2701,16 @@ END
         input_links = os.path.join(self.output_dirs['metrics_directory'], "multiqc_inputs")
         output = os.path.join(self.output_dirs['metrics_directory'], "multiqc")
 
-        job = multiqc.run(
-                [input_links],
-                output
-                )
-        job.name = "multiqc"
-        job.input_files = self.multiqc_inputs
-        jobs.append(job)
+        skip_full_report = config.param("multiqc", "skip_full_report") # set to true when running thousands of samples
+        
+        if skip_full_report != "true":
+            job = multiqc.run(
+                    [input_links],
+                    output
+                    )
+            job.name = "multiqc"
+            job.input_files = self.multiqc_inputs
+            jobs.append(job)
 
         by_sample = config.param("multiqc", "by_sample", required=False) # option to also generate individual multiqc reports for each sample
 
