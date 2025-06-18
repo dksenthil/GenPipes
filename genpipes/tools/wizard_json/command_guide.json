@@ -231,15 +231,15 @@
         {
             "id": "o_command_question",
             "type": "confirm",
-            "question":"Do you want to run the pipeline somewhere other than your current directory ?",
+            "question":"Do you want to run the pipeline in your current directory ?",
             "options": [
                 {
                     "label": "Yes",
-                    "next": "input_directory_name"
+                    "next": "pipeline_check_for_file_question"
                 },
                 {
                     "label": "No",
-                    "next": "pipeline_check_for_file_question"
+                    "next": "input_directory_name"
                 }
             ]
         },
