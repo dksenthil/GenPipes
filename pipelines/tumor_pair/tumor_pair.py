@@ -7260,11 +7260,57 @@ sed -i s/"isEmail = isLocalSmtp()"/"isEmail = False"/g {input}""".format(
 
             pair_directory = os.path.join(self.output_dirs['sv_variants_directory'], tumor_pair.name)
             gridss_directory = os.path.join(pair_directory, "gridss")
+            preprocess_normal_output = os.path.join(gridss_directory, 
+                                                    f"{os.path.basename(input_normal)}.gridss.working",
+                                                    f"{os.path.basename(input_normal)}.sv.bam"
+                                                    )
+            preprocess_tumor_output = os.path.join(gridss_directory, 
+                                                    f"{os.path.basename(input_tumor)}.gridss.working",
+                                                    f"{os.path.basename(input_tumor)}.sv.bam"
+                                                    )
             normal_output_prefix = os.path.join(gridss_directory, tumor_pair.normal.name)
             tumor_output_prefix = os.path.join(gridss_directory, tumor_pair.tumor.name)
             gridss_vcf_output = tumor_output_prefix + ".gridss.vcf.gz"
             gridds_bam_output = tumor_output_prefix + ".assembly.bam"
 
+            jobs.append(
+                concat_jobs(
+                    [
+                        bash.mkdir(
+                            gridss_directory,
+                            remove=True
+                        ),
+                        gridss.preprocess(
+                            input_normal,
+                            gridss_directory,
+                            preprocess_normal_output
+                        )
+                    ],
+                    name=f"gridss_paired_somatic.preprocess.{tumor_pair.normal.name}",
+                    samples=[tumor_pair.normal],
+                    readsets=[*list(tumor_pair.normal.readsets)],
+                )
+            )
+
+            jobs.append(
+                concat_jobs(
+                    [
+                        bash.mkdir(
+                            gridss_directory,
+                            remove=True
+                        ),
+                        gridss.preprocess(
+                            input_tumor,
+                            gridss_directory,
+                            preprocess_tumor_output
+                        )
+                    ],
+                    name=f"gridss_paired_somatic.preprocess.{tumor_pair.tumor.name}",
+                    samples=[tumor_pair.tumor],
+                    readsets=[*list(tumor_pair.tumor.readsets)],
+                )
+            )
+            
             jobs.append(
                 concat_jobs(
                     [
@@ -7284,7 +7330,7 @@ sed -i s/"isEmail = isLocalSmtp()"/"isEmail = False"/g {input}""".format(
                     name="gridss_paired_somatic." + tumor_pair.name,
                     samples=[tumor_pair.normal, tumor_pair.tumor],
                     readsets=[*list(tumor_pair.normal.readsets), *list(tumor_pair.tumor.readsets)],
-                    input_dependency=[input_normal, input_tumor]
+                    input_dependency=[preprocess_normal_output, preprocess_tumor_output]
                 )
             )
 

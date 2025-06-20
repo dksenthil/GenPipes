@@ -18,12 +18,49 @@
 ################################################################################
 
 # Python Standard Modules
-import logging
 import os
 
 # MUGQIC Modules
 from core.config import config
 from core.job import Job
+
+
+def preprocess(
+    input_bam,
+    output_dir,
+    output_bam
+    ):
+
+    return Job(
+        [input_bam],
+        [output_bam],
+        [
+            ['gridss_paired_somatic', 'module_java'],
+            ['gridss_paired_somatic', 'module_R'],
+            ['gridss_paired_somatic', 'module_samtools'],
+            ['gridss_paired_somatic', 'module_bwa'],
+            ['gridss_paired_somatic', 'module_gridss']
+        ],
+        command="""\
+$GRIDSS_HOME/gridss \\
+    -t {threads} \\
+    --steps preprocess \\
+    -b {blacklist_bed} \\
+    -r {reference_sequence} \\
+    -w {outdir} \\
+    -j $GRIDSS_JAR \\
+    --jvmheap {ram} \\
+    {other_options} \\
+    {input_bam}""".format(
+            threads=config.param('gridss_paired_somatic', 'threads', param_type='int'),
+            blacklist_bed=config.param('gridss_paired_somatic', 'blacklist_bed', param_type='filepath'),
+            reference_sequence=config.param('gridss_paired_somatic', 'genome_fasta', param_type='filepath'),
+            outdir=output_dir,
+            ram=config.param('gridss_paired_somatic', 'ram'),
+            other_options=config.param('gridss_paired_somatic', 'other_options', param_type='string'),
+            input_bam=input_bam
+        )
+    )
 
 def paired_somatic(
     input_normal,
