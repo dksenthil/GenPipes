@@ -435,6 +435,12 @@
             "id": "end",
             "type": "message",
             "message": "\nHere is your full GenPipes command:\n{{final_command}} \n",
+            "next": "analysis_command"
+        },
+        {
+            "id": "analysis_command",
+            "type": "message",
+            "message": "\nTo run GenPipes now do: bash {{g_filename}}",
             "next":{
                 "external": "general_guide.json",
                 "entryPoint": "end"
