@@ -3,9 +3,18 @@
 import json
 import os
 import sys
+import logging
 
 import questionary 
 from jinja2 import Environment 
+
+# Configure logging at the module level
+logger = logging.getLogger(__name__)
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(message)s",
+    handlers=[logging.StreamHandler(sys.stdout)]
+)
 
 def load_guide (file_path):
     """
@@ -84,7 +93,7 @@ class Wizard:
             if node.get("type") != "message":
                 return True
 
-        print("ERROR! You cannot go back further, you're at the first question.")
+        logger.error("ERROR! You cannot go back further, you're at the first question.")
         return False
         
     def exit_text (self, prompt):
@@ -93,7 +102,7 @@ class Wizard:
         """
         answer = questionary.text(f"{prompt} (or type 'back' to go back)").ask()
         if answer is None:
-            print("Exiting GenPipes wizard.")
+            logger.info("Exiting GenPipes wizard.")
             sys.exit(0)
         return answer.strip()
     
@@ -103,7 +112,7 @@ class Wizard:
         """
         answer = questionary.select(prompt, choices=["Yes", "No", "Back"]).ask()
         if answer is None:
-            print("\nExiting GenPipes wizard.")
+            logger.info("\nExiting GenPipes wizard.")
             sys.exit(0)
         return answer
     
@@ -114,7 +123,7 @@ class Wizard:
         extended_choices = choices + ["Back"]
         answer = questionary.select(prompt, choices=extended_choices).ask()
         if answer is None:
-            print("\nExiting GenPipes wizard.")
+            logger.info("\nExiting GenPipes wizard.")
             sys.exit(0)
         return answer
     
@@ -198,7 +207,7 @@ class Wizard:
             #Message: output message for user, if no next node then end of wizard
             elif node_type == "message":
                 message = self.apply_variables(node["message"])
-                print(message)
+                logger.info(message)
                 next_node = node.get("next")
                 if not next_node:
                     break
@@ -212,7 +221,7 @@ class Wizard:
                 if value in cases:
                     self.goto(cases[value]["node"])
                 else:
-                    print(f"ERROR! No matching case for {variable} ='{value}' at node {node['id']}")
+                    logger.error(f"ERROR! No matching case for {variable} ='{value}' at node {node['id']}")
                     sys.exit(1)
 
             #Input: Prompt the user for input and store it as a variable 
@@ -231,23 +240,23 @@ class Wizard:
                     #ensure that user doesn't leave input questions empty
                     if variable == "raw_readset_filename":
                         if not input.strip():
-                            print("ERROR! You must enter a readset file name. Please try again.")
+                            logger.error("ERROR! You must enter a readset file name. Please try again.")
                             continue
                     if variable == "design_file_name":
                         if not input.strip():
-                            print("ERROR! You must enter a design file name. Please try again.")
+                            logger.error("ERROR! You must enter a design file name. Please try again.")
                             continue
                     if variable == "pair_file_name":
                         if not input.strip():
-                            print("ERROR! You must enter a pair file name. Please try again.")
+                            logger.error("ERROR! You must enter a pair file name. Please try again.")
                             continue
                     if variable == "raw_path_custom_ini":
                         if not input.strip():
-                            print("ERROR! You must enter a path to the custom ini name. Please try again.")
+                            logger.error("ERROR! You must enter a path to the custom ini name. Please try again.")
                             continue
                     if variable == "directory_name":
                         if not input.strip():
-                            print("ERROR! You must enter a directory name. Please try again.")
+                            logger.error("ERROR! You must enter a directory name. Please try again.")
                             continue
 
                     if variable == "step_range":
@@ -258,7 +267,7 @@ class Wizard:
                     break
 
             else:
-                print(f"ERROR! Unknown node type: {node_type} in {self.current_file}")
+                logger.error(f"ERROR! Unknown node type: {node_type} in {self.current_file}")
                 sys.exit(1)
     
     def fix_filenames(self):
@@ -355,7 +364,7 @@ class Wizard:
         pipeline_data = valid_steps.get(pipeline, {})
         valid_range = pipeline_data.get(protocol, pipeline_data.get("default"))
         if not valid_range:
-            print(f"ERROR! Please enter a valid step range.")
+            logger.error(f"ERROR! Please enter a valid step range.")
             return False
         valid_start, valid_end = valid_range
 
@@ -365,29 +374,29 @@ class Wizard:
                 try:
                     start, end = map(int, part.split('-', 1))
                 except ValueError:
-                    print(f"ERROR!'{part}' not in the correct step range format.")
+                    logger.error(f"ERROR!'{part}' not in the correct step range format.")
                     return False
                 if start > end or start < valid_start or end > valid_end:
-                    print(f"ERROR! Range '{part}' is out of bounds.\nPlease enter a valid step range within these bounds: ({valid_start}-{valid_end}).")
+                    logger.error(f"ERROR! Range '{part}' is out of bounds.\nPlease enter a valid step range within these bounds: ({valid_start}-{valid_end}).")
                     return False
             else:
                 try:
                     step = int(part)
                 except ValueError:
-                    print(f"ERROR! '{part}' is not a number.")
+                    logger.error(f"ERROR! '{part}' is not a number.")
                     return False
                 if step < valid_start or step > valid_end:
-                    print(f"ERROR! Step '{step}' is out of bounds.\nPlease enter a valid step range within these bounds: ({valid_start}-{valid_end}).")
+                    logger.error(f"ERROR! Step '{step}' is out of bounds.\nPlease enter a valid step range within these bounds: ({valid_start}-{valid_end}).")
                     return False
 
         return True
 
 #for testing
 def main():
-    print("\nWelcome to the GenPipes Wizard!")
-    print("This tool will help you select the appropriate deployment method, pipeline, protocol, and/or construct the command to run GenPipes.")
-    print("Press Ctrl+C at any time to exit the wizard.")
-    print ("Let's begin!\n")
+    logger.info("\nWelcome to the GenPipes Wizard!")
+    logger.info("This tool will help you select the appropriate deployment method, pipeline, protocol, and/or construct the command to run GenPipes.")
+    logger.info("Press Ctrl+C at any time to exit the wizard.")
+    logger.info("Let's begin!\n")
     start_json_file = "general_guide.json"
     start = Wizard(start_json_file)
     start.tree_traversal()
