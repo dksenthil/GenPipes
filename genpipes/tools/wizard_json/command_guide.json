@@ -434,7 +434,11 @@
         {
             "id": "end",
             "type": "message",
-            "message": "\nHere is your full GenPipes command:\n{{final_command}} \n"
+            "message": "\nHere is your full GenPipes command:\n{{final_command}} \n",
+            "next":{
+                "external": "general_guide.json",
+                "entryPoint": "end"
+            }
         }
     ]
 }
