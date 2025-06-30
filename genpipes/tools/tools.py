@@ -23,6 +23,7 @@ import sys
 
 from . import log_report
 from . import job2json_project_tracking
+from . import wizard 
 
 
 def add_subcommands(parser):
@@ -165,10 +166,5 @@ def run_wizard(args):
     """
     Run the wizard.py script.
     """
-    try:
-        from . import wizard 
-        wizard.main()
-    except ModuleNotFoundError as e:
-        print("ERROR! The wizard tool requires additional dependencies.")
-        print("Please run: pip install questionary jinja2")
-        sys.exit(1)
+    wizard.main()
+
