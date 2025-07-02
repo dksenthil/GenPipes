@@ -440,7 +440,7 @@
         {
             "id": "analysis_command",
             "type": "message",
-            "message": "\nTo run GenPipes, now do: bash {{g_filename}}",
+            "message": "\nTo run GenPipes now, do: bash {{g_filename}}",
             "next":{
                 "external": "general_guide.json",
                 "entryPoint": "end"
