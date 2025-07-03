@@ -231,6 +231,9 @@ def time_str_to_seconds(time_str):
     parts = time_str.split(':')
     if len(parts) == 3:
         h, m, s = parts
+        if '-' in h:
+            d, h = h.split('-')
+            h = d * 24 + h
     elif len(parts) == 2:
         h = '0'
         m, s = parts
