@@ -197,10 +197,7 @@ class Wizard:
 
                 self.variables[variable] = updated_value
 
-                if variable in ("r_command", "path_custom_ini", "g_command", "d_command", "p_command"):
-                    self.fix_filenames()
-
-                if variable == "g_command" or variable == "o_command":
+                if variable in ("r_command", "path_custom_ini", "g_command", "d_command", "p_command", "o_command"):
                     self.fix_filenames()
 
                 self.goto(node["next"])
@@ -259,6 +256,10 @@ class Wizard:
                         if not input.strip():
                             logger.error("ERROR! You must enter a directory name. Please try again.")
                             continue
+                    if variable == "g_filename":
+                        if not input.strip():
+                            logger.error("ERROR! You must enter a file name. Please try again.")
+                            continue
 
                     if variable == "step_range":
                         if not self.valid_step_range():
@@ -311,13 +312,6 @@ class Wizard:
         if not self.variables.get("directory_name"):
             o_command = ""
         self.variables["o_command"] = o_command
-
-        #If user skips g command --> dont want -g in the final command
-        g_command = self.variables.get("g_command", "").strip()
-        g_filename = self.variables.get("g_filename", "").strip()
-        if not g_filename:
-            g_command = ""
-        self.variables["g_command"] = g_command
 
     def valid_step_range(self):
         """
