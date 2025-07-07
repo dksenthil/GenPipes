@@ -192,7 +192,7 @@ class Wizard:
                 if variable in ("r_command", "path_custom_ini", "g_command", "d_command", "p_command"):
                     self.fix_filenames()
 
-                if "o_command" in variable:
+                if ("o_command", "g_command") in variable:
                     self.fix_filenames()
 
                 updated_value = self.apply_variables(raw_value)
