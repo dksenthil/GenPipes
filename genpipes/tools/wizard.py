@@ -311,6 +311,12 @@ class Wizard:
             o_command = ""
         self.variables["o_command"] = o_command
 
+        #If user skips g command --> dont want -g in the final command
+        g_command = self.variables.get("g_command", "").strip()
+        if not self.variables.get("directory_name"):
+            g_command = ""
+        self.variables["g_command"] = g_command
+
     def valid_step_range(self):
         """
         Ensure that inputted step range is valid
