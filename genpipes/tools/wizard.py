@@ -189,6 +189,12 @@ class Wizard:
                 variable = node["variable"]
                 raw_value = node["value"]
 
+                if variable in ("r_command", "path_custom_ini", "g_command", "d_command", "p_command"):
+                    self.fix_filenames()
+
+                if "o_command" in variable:
+                    self.fix_filenames()
+
                 updated_value = self.apply_variables(raw_value)
 
                 #Clean up extra spaces in final command
@@ -196,11 +202,8 @@ class Wizard:
                     updated_value = " ".join(updated_value.split())
 
                 self.variables[variable] = updated_value
-
-                if variable in ("r_command", "path_custom_ini", "g_command", "d_command", "p_command", "o_command"):
-                    self.fix_filenames()
-
                 self.goto(node["next"])
+
 
             #Message: output message for user, if no next node then end of wizard
             elif node_type == "message":
