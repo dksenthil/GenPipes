@@ -16,7 +16,7 @@
             "id": "readset_file_question",
             "type": "input",
             "variable": "raw_readset_filename",
-            "prompt": "Enter the name of the readset file:", 
+            "prompt": "Enter the name of the readset file", 
             "next": "store_readset_filename"
         },
         {
@@ -159,7 +159,7 @@
             "id": "path_custom_ini_question",
             "type": "input",
             "variable": "raw_path_custom_ini",
-            "prompt": "Enter the name of the custom ini:",
+            "prompt": "Enter the name of the custom ini",
             "next": "store_path_custom_ini"
         },
         {
@@ -231,7 +231,7 @@
         {
             "id": "o_command_question",
             "type": "confirm",
-            "question":"Do you want to run the pipeline in your current directory ?",
+            "question":"Do you want to run the pipeline in your current directory?",
             "options": [
                 {
                     "label": "Yes",
@@ -247,7 +247,7 @@
             "id": "input_directory_name",
             "type": "input",
             "variable": "directory_name",
-            "prompt": "Enter the name of the directory you want to run the pipeline in:", 
+            "prompt": "Enter the name of the directory you want to run the pipeline in", 
             "next": "store_directory_name"
         },
         {
@@ -321,7 +321,7 @@
             "id": "input_design_file_name",
             "type": "input",
             "variable": "design_file_name",
-            "prompt": "Enter the name of the design file:",
+            "prompt": "Enter the name of the design file",
             "next": "store_design_file_name"
         },
         {
@@ -364,7 +364,7 @@
             "id": "input_pair_file_name",
             "type": "input",
             "variable": "pair_file_name",
-            "prompt": "Enter the name of the pair file:",
+            "prompt": "Enter the name of the pair file",
             "next": "store_pair_file_name"
         },
         {
@@ -400,7 +400,7 @@
             "id": "input_step_range",
             "type": "input",
             "variable": "step_range",
-            "prompt": "Enter the step range (e.g '1-5', '3,6,7', '2,4-8'): ",
+            "prompt": "Enter the step range (e.g '1-5', '3,6,7', '2,4-8')",
             "next": "store_step_range"
         },
         {
@@ -414,7 +414,7 @@
             "id": "g_command_question",
             "type": "input",
             "variable": "g_filename",
-            "prompt": "Enter a file name to save the GenPipes run commands (leave blank to output to stdout):",
+            "prompt": "Enter a file name to save the GenPipes run commands",
             "next": "store_g_file_name"
         },
         {

@@ -100,7 +100,7 @@ class Wizard:
         """
         Prompt user to input text. Exit wizard if user cancels (Ctrl +C)
         """
-        answer = questionary.text(f"{prompt} (or type 'back' to go back)").ask()
+        answer = questionary.text(f"{prompt} (or type 'back' to go back):").ask()
         if answer is None:
             logger.info("Exiting GenPipes wizard.")
             sys.exit(0)
