@@ -7444,8 +7444,6 @@ sed -i s/"isEmail = isLocalSmtp()"/"isEmail = False"/g {input}""".format(
 
         for tumor_pair in self.tumor_pairs.values():
             djerba_dir = os.path.join(self.output_dirs['report'][tumor_pair.name], "djerba")
-            #purple_dir = os.path.join(self.output_dirs['paired_variants_directory'], tumor_pair.name, "purple") # has to be a zipped directory, create zip file as part of job
-            #purple_zip = os.path.join(djerba_dir, tumor_pair.tumor.name + ".purple.zip")
             purple_zip = os.path.join(self.output_dirs['paired_variants_directory'], tumor_pair.name, f"{tumor_pair.name}.purple_ensemble.zip")
 
             cpsr_directory = os.path.join(ensemble_directory, tumor_pair.name, "cpsr")
@@ -7455,7 +7453,6 @@ sed -i s/"isEmail = isLocalSmtp()"/"isEmail = False"/g {input}""".format(
             input_maf = os.path.join(pcgr_directory, tumor_pair.name + ".pcgr_acmg." + assembly + ".maf")
             clean_maf =  os.path.join(pcgr_directory, tumor_pair.name + ".pcgr_acmg." + assembly + ".clean.maf") # MAF from pcgr version 1.4.1 required, remove any empty t_depth lines, needs to be gzipped
 
-            provenance_decoy = os.path.join(djerba_dir, "provenance_subset.tsv.gz")
             config_file = os.path.join(djerba_dir, tumor_pair.name + ".djerba.ini")
             djerba_script = os.path.join(djerba_dir, "djerba_report." + tumor_pair.name + ".sh")
 
@@ -7475,7 +7472,6 @@ sed -i s/"isEmail = isLocalSmtp()"/"isEmail = False"/g {input}""".format(
                             input_maf,
                             clean_maf
                             ),
-                        bash.touch(provenance_decoy),
                         djerba.make_config(
                             config_file,
                             tumor_pair.name,
