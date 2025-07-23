@@ -46,9 +46,7 @@ def run(
 
     purple_outputs = [
         os.path.join(output_dir, tumor_name + ".purple.purity.tsv"),
-        os.path.join(output_dir, tumor_name + ".purple.qc"),
-        os.path.join(output_dir, tumor_name + ".driver.catalog.somatic.tsv"),
-        os.path.join(output_dir, tumor_name + ".driver.catalog.germline.tsv")
+        os.path.join(output_dir, tumor_name + ".purple.qc")
     ]
 
     if structural_sv is not None and sv_recovery is not None:
@@ -60,6 +58,12 @@ def run(
     if structural_sv is not None:
         circos_plot = os.path.join(output_dir, "plot", tumor_name + ".circos.png")
         purple_outputs.append(circos_plot)
+
+    if driver_gene_panel is not None:
+        somatic_catalog = os.path.join(output_dir, tumor_name + ".driver.catalog.somatic.tsv")
+        germline_catalog = os.path.join(output_dir, tumor_name + ".driver.catalog.germline.tsv")
+        purple_outputs.append(somatic_catalog)
+        purple_outputs.append(germline_catalog)
 
     return Job(
         input_files,
