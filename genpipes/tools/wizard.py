@@ -279,6 +279,8 @@ class Wizard:
         """
         Handle cases where user includes/doesn't include .txt/ini/sh to their input
         """
+
+        '''
         readset_filename = self.variables.get("raw_readset_filename", "").strip()
         if readset_filename and not readset_filename.endswith(".txt"):
             readset_filename += ".txt"
@@ -293,6 +295,7 @@ class Wizard:
         if pair_filename and not pair_filename.endswith(".txt"):
             pair_filename += ".txt"
         self.variables["pair_file_name"] = pair_filename
+        '''
 
         path_custom_ini = self.variables.get("raw_path_custom_ini", "").strip()
         if path_custom_ini and not path_custom_ini.endswith(".ini"):
