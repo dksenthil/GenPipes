@@ -500,6 +500,8 @@ pandoc \\
                 if len(sample.readsets) == 1:
                     readset_bam = readset_bams[0]
                     readset_index = re.sub("\.bam$", ".bam.bai", readset_bam)
+                    if not os.path.exists(readset_index):
+                        readset_index = re.sub("\.bam$", ".bai", readset_bam)
                     sample_index = re.sub("\.bam$", ".bam.bai", sample_bam)
 
                     if alignment_directory in readset_bam:
