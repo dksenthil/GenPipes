@@ -6292,10 +6292,6 @@ sed -i s/"isEmail = isLocalSmtp()"/"isEmail = False"/g {os.path.join(germline_di
                     for sequence in self.sequence_dictionary_variant() if sequence['type'] == 'primary'
                 ]
 
-            for input_vcf in all_inputs:
-                if not self.is_gz_file(os.path.join(self.output_dir, input_vcf)):
-                    log.error(f"Incomplete varscan2 vcf: {input_vcf}\n")
-
             all_output = os.path.join(pair_directory, f"{tumor_pair.name}.varscan2.vcf.gz")
             all_output_vt = os.path.join(pair_directory, f"{tumor_pair.name}.varscan2.vt.vcf.gz")
 
@@ -6723,10 +6719,6 @@ sed -i s/"isEmail = isLocalSmtp()"/"isEmail = False"/g {os.path.join(germline_di
 
             elif scatter_jobs > 1:
                 merge_list = [f"{output_prefix}.{idx}.mutect2.vcf.gz" for idx in range(scatter_jobs)]
-
-                for input_vcf in merge_list:
-                    if not self.is_gz_file(os.path.join(self.output_dir, input_vcf)):
-                        log.error(f"Incomplete mutect2 vcf: {input_vcf}\n")
 
                 if global_conf.global_get('gatk_mutect2', 'module_gatk').split("/")[2] > "4":
                     output_stats = os.path.join(pair_directory, f"{tumor_pair.name}.mutect2.vcf.gz.stats")
@@ -7200,10 +7192,6 @@ sed -i s/"isEmail = isLocalSmtp()"/"isEmail = False"/g {os.path.join(germline_di
             else:
                 merge_list = [f"{output_prefix}.{idx}.vardict.vcf.gz" for idx in range(1, scatter_jobs + 1)]
 
-                for input_vcf in merge_list:
-                    if not self.is_gz_file(os.path.join(self.output_dir, input_vcf)):
-                        log.error(f"Incomplete vardict vcf: {input_vcf}\n")
-
                 jobs.append(
                     concat_jobs(
                         [
@@ -7308,10 +7296,6 @@ sed -i s/"isEmail = isLocalSmtp()"/"isEmail = False"/g {os.path.join(germline_di
             input_varscan2 = os.path.join(input_directory, f"{tumor_pair.name}.varscan2.somatic.vt.vcf.gz")
             inputs_somatic = [input_mutect2, input_strelka2, input_vardict, input_varscan2]
 
-            for input_vcf in inputs_somatic:
-                if not self.is_gz_file(os.path.join(self.output_dir, input_vcf)):
-                    log.error(f"Incomplete ensemble vcf: {input_vcf}\n")
-
             output_ensemble = os.path.join(paired_ensemble_directory, f"{tumor_pair.name}.ensemble.somatic.vt.vcf.gz")
 
             jobs.append(
@@ -7367,10 +7351,6 @@ sed -i s/"isEmail = isLocalSmtp()"/"isEmail = False"/g {os.path.join(germline_di
             input_varscan2 = os.path.join(input_directory, f"{tumor_pair.name}.varscan2.germline.vt.vcf.gz")
 
             inputs_germline = [input_strelka2, input_vardict, input_varscan2]
-
-            for input_vcf in inputs_germline:
-                if not self.is_gz_file(os.path.join(self.output_dir, input_vcf)):
-                    log.error(f"Incomplete ensemble vcf: {input_vcf}\n")
 
             output_ensemble = os.path.join(paired_ensemble_directory, f"{tumor_pair.name}.ensemble.germline.vt.vcf.gz")
 
