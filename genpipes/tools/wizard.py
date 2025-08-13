@@ -402,12 +402,30 @@ class Wizard:
 #for testing
 def main():
     logger.info("\nWelcome to the GenPipes Wizard!")
-    logger.info("This tool will help you select the appropriate deployment method, pipeline, protocol, and/or construct the command to run GenPipes.")
-    logger.info("Press Ctrl+C at any time to exit the wizard.")
-    logger.info("Let's begin!\n")
-    start_json_file = "general_guide.json"
-    start = Wizard(start_json_file)
-    start.tree_traversal()
+logger.info(r"""
+ __        __   _                            _          _   _                                               .-+: 
+ \ \      / /__| | ___ ___  _ __ ___   ___  | |_ ___   | |_| |__   ___                                   .-+*--*- 
+  \ \ /\ / / _ \ |/ __/ _ \| '_ ` _ \ / _ \ | __/ _ \  | __| '_ \ / _ \                                 :+#=.   =*:
+   \ V  V /  __/ | (_| (_) | | | | | |  __/ | || (_) | | |_| | | |  __/                               :=#+.   ... -*:
+   _\_/\_/ \___|_|\___\___/|_| |_| |_|\___| _\__\___/ __\__|_| |_|\___|    _ _                     .-#*.      :*=. =*: 
+  / ___| ___ _ __ |  _ \(_)_ __   ___  ___  \ \      / (_)______ _ _ __ __| | |                 .-#*.       .=#+=#*=**:
+ | |  _ / _ \ '_ \| |_) | | '_ \ / _ \/ __|  \ \ /\ / /| |_  / _` | '__/ _` | |              .:##:        .=#=     :*%+. 
+ | |_| |  __/ | | |  __/| | |_) |  __/\__ \   \ V  V / | |/ / (_| | | | (_| |_|              ++.      :--=%- 
+  \____|\___|_| |_|_|   |_| .__/ \___||___/    \_/\_/  |_/___\__,_|_|  \__,_(_)              .#-         .+=   
+                          |_|                                                                -*:            -#.
+                                                                                             :#*%@%=:  :+%@@*.-#:
+ This tool will help you select the appropriate deployment method, pipeline,                  *+.            .++
+ protocol, and/or construct the command to run GenPipes.                              :*%%%%*=**:  ..:.....    .+#-+#%%#*:
+                                                                                .#%+:...    .*=                -#-     ..:+%#:  
+ Press Ctrl+C at any time to exit the wizard.                                  #+.          .+##=.          .=#%%-          .=#.    
+                                                                               %=              .:-=*%%%%%#+=-:.              -%.
+ Let's begin!                                                                  .-*#=.                                    .=##=
+                                                                                  .:=+*#**+=-:.                .:-=+**#*+=:. 
+                                                                                          ..:---====+=++++=+===----:..
+""")                                                            
+start_json_file = "general_guide.json"
+start = Wizard(start_json_file)
+start.tree_traversal()
 
 if __name__ == "__main__":
     main()
