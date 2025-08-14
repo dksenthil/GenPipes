@@ -148,7 +148,7 @@
         {
             "id": "pipeline_choice_message_next_command",
             "type": "message",
-            "message": "Your choice of pipeline to run GenPipes is: {{pipeline_name}}. Note: this pipeline does not require a protocol.",
+            "message": "Your choice of pipeline to run GenPipes is: {{pipeline_name}}. Note: this pipeline only has one protocol.",
             "next": "command_help"
         },
 
