@@ -23,7 +23,7 @@
         {
             "id": "chip_dna_longread_methyl_seq_question",
             "type": "confirm",
-            "question": "Are you using long read option sequencing data?",
+            "question": "Are you using long read sequencing data?",
             "options": [
                 {
                     "label": "Yes",
@@ -174,7 +174,7 @@
         {
             "id": "nanopore_cov_seq_question",
             "type": "confirm",
-            "question": "Are you using long read option sequencing data?",
+            "question": "Are you using long read sequencing data?",
             "options": [
                 {
                     "label": "Yes",
