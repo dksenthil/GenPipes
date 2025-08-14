@@ -127,6 +127,12 @@ class Wizard:
             sys.exit(0)
         return answer
     
+    def add_space (self):
+        """
+        Add empty line between answer and the next question 
+        """
+        print()
+    
     def tree_traversal(self):
         """
         Traverse through the JSON files to prompt the user questions
@@ -142,12 +148,14 @@ class Wizard:
                     answer = self.exit_confirm(self.apply_variables(node["question"]))
                     if answer == "Back":
                         if self.go_back():
+                            self.add_space()
                             break   
                         else:
                             continue
                     chosen = answer
                     next_info = next(opt["next"] for opt in node["options"] if opt["label"] == chosen)
                     self.goto(next_info)
+                    self.add_space()
                     break
 
             #Selection: single-select question from list 
@@ -159,11 +167,13 @@ class Wizard:
                         choice = self.exit_select(self.apply_variables(node["question"]), labels)
                         if choice == "Back":
                             if self.go_back():
+                                self.add_space()
                                 break
                             else: 
                                 continue   
                         next_node = next(current_choice for current_choice in node["choices"] if current_choice["label"] == choice)
                         self.goto(next_node["node"])
+                        self.add_space()
                         break
 
                 #choices_cases
@@ -176,11 +186,13 @@ class Wizard:
                                 choice = self.exit_select(self.apply_variables(node["question"]), labels)
                                 if choice == "Back":
                                     if self.go_back(): 
+                                        self.add_space()
                                         break
                                     else: 
                                         continue
                                 next_node = next(current_choice for current_choice in case_block["choices"] if current_choice["label"] == choice)
                                 self.goto(next_node["node"])
+                                self.add_space()
                                 break
                             break
 
@@ -203,7 +215,7 @@ class Wizard:
 
                 self.variables[variable] = updated_value
                 self.goto(node["next"])
-
+                #self.add_space()
 
             #Message: output message for user, if no next node then end of wizard
             elif node_type == "message":
@@ -213,6 +225,7 @@ class Wizard:
                 if not next_node:
                     break
                 self.goto(next_node)
+                self.add_space()
 
             #Switch: determine the next node based on cases (e.g pipeline/protocol name)
             elif node_type == "switch":
@@ -231,7 +244,8 @@ class Wizard:
                 while True:
                     input = self.exit_text(self.apply_variables(node["prompt"]))
                     if input.lower() == "back":
-                        if self.go_back(): 
+                        if self.go_back():
+                            self.add_space() 
                             break
                         else: 
                             continue
@@ -241,27 +255,39 @@ class Wizard:
                     #ensure that user doesn't leave input questions empty
                     if variable == "raw_readset_filename":
                         if not input.strip():
+                            self.add_space()
                             logger.error("ERROR! You must enter a readset file name. Please try again.")
+                            self.add_space()
                             continue
                     if variable == "design_file_name":
                         if not input.strip():
+                            self.add_space()
                             logger.error("ERROR! You must enter a design file name. Please try again.")
+                            self.add_space()
                             continue
                     if variable == "pair_file_name":
                         if not input.strip():
+                            self.add_space()
                             logger.error("ERROR! You must enter a pair file name. Please try again.")
+                            self.add_space()
                             continue
                     if variable == "raw_path_custom_ini":
                         if not input.strip():
+                            self.add_space()
                             logger.error("ERROR! You must enter a path to the custom ini name. Please try again.")
+                            self.add_space()
                             continue
                     if variable == "directory_name":
                         if not input.strip():
+                            self.add_space()
                             logger.error("ERROR! You must enter a directory name. Please try again.")
+                            self.add_space()
                             continue
                     if variable == "g_filename":
                         if not input.strip():
+                            self.add_space()
                             logger.error("ERROR! You must enter a file name. Please try again.")
+                            self.add_space()
                             continue
 
                     if variable == "step_range":
@@ -269,10 +295,12 @@ class Wizard:
                             continue
 
                     self.goto(node["next"])
+                    self.add_space()
                     break
 
             else:
                 logger.error(f"ERROR! Unknown node type: {node_type} in {self.current_file}")
+                self.add_space()
                 sys.exit(1)
     
     def fix_filenames(self):
@@ -372,7 +400,9 @@ class Wizard:
         pipeline_data = valid_steps.get(pipeline, {})
         valid_range = pipeline_data.get(protocol, pipeline_data.get("default"))
         if not valid_range:
+            self.add_space()
             logger.error(f"ERROR! Please enter a valid step range.")
+            self.add_space()
             return False
         valid_start, valid_end = valid_range
 
@@ -382,50 +412,57 @@ class Wizard:
                 try:
                     start, end = map(int, part.split('-', 1))
                 except ValueError:
+                    self.add_space()
                     logger.error(f"ERROR!'{part}' not in the correct step range format.")
+                    self.add_space()
                     return False
                 if start > end or start < valid_start or end > valid_end:
+                    self.add_space()
                     logger.error(f"ERROR! Range '{part}' is out of bounds.\nPlease enter a valid step range within these bounds: ({valid_start}-{valid_end}).")
+                    self.add_space()
                     return False
             else:
                 try:
                     step = int(part)
                 except ValueError:
+                    self.add_space()
                     logger.error(f"ERROR! '{part}' is not a number.")
+                    self.add_space()
                     return False
                 if step < valid_start or step > valid_end:
+                    self.add_space()
                     logger.error(f"ERROR! Step '{step}' is out of bounds.\nPlease enter a valid step range within these bounds: ({valid_start}-{valid_end}).")
+                    self.add_space()
                     return False
 
         return True
 
 #for testing
 def main():
-    logger.info("\nWelcome to the GenPipes Wizard!")
-logger.info(r"""
- __        __   _                            _          _   _                                               .-+: 
- \ \      / /__| | ___ ___  _ __ ___   ___  | |_ ___   | |_| |__   ___                                   .-+*--*- 
-  \ \ /\ / / _ \ |/ __/ _ \| '_ ` _ \ / _ \ | __/ _ \  | __| '_ \ / _ \                                 :+#=.   =*:
-   \ V  V /  __/ | (_| (_) | | | | | |  __/ | || (_) | | |_| | | |  __/                               :=#+.   ... -*:
-   _\_/\_/ \___|_|\___\___/|_| |_| |_|\___| _\__\___/ __\__|_| |_|\___|    _ _                     .-#*.      :*=. =*: 
-  / ___| ___ _ __ |  _ \(_)_ __   ___  ___  \ \      / (_)______ _ _ __ __| | |                 .-#*.       .=#+=#*=**:
- | |  _ / _ \ '_ \| |_) | | '_ \ / _ \/ __|  \ \ /\ / /| |_  / _` | '__/ _` | |              .:##:        .=#=     :*%+. 
- | |_| |  __/ | | |  __/| | |_) |  __/\__ \   \ V  V / | |/ / (_| | | | (_| |_|              ++.      :--=%- 
-  \____|\___|_| |_|_|   |_| .__/ \___||___/    \_/\_/  |_/___\__,_|_|  \__,_(_)              .#-         .+=   
-                          |_|                                                                -*:            -#.
-                                                                                             :#*%@%=:  :+%@@*.-#:
- This tool will help you select the appropriate deployment method, pipeline,                  *+.            .++
- protocol, and/or construct the command to run GenPipes.                              :*%%%%*=**:  ..:.....    .+#-+#%%#*:
-                                                                                .#%+:...    .*=                -#-     ..:+%#:  
- Press Ctrl+C at any time to exit the wizard.                                  #+.          .+##=.          .=#%%-          .=#.    
-                                                                               %=              .:-=*%%%%%#+=-:.              -%.
- Let's begin!                                                                  .-*#=.                                    .=##=
-                                                                                  .:=+*#**+=-:.                .:-=+**#*+=:. 
-                                                                                          ..:---====+=++++=+===----:..
-""")                                                            
-start_json_file = "general_guide.json"
-start = Wizard(start_json_file)
-start.tree_traversal()
+    logger.info(r"""
+    __        __   _                            _          _   _                                               .-+: 
+    \ \      / /__| | ___ ___  _ __ ___   ___  | |_ ___   | |_| |__   ___                                   .-+*--*- 
+     \ \ /\ / / _ \ |/ __/ _ \| '_ ` _ \ / _ \ | __/ _ \  | __| '_ \ / _ \                                 :+#=.   =*:
+      \ V  V /  __/ | (_| (_) | | | | | |  __/ | || (_) | | |_| | | |  __/                               :=#+.   ... -*:
+      _\_/\_/ \___|_|\___\___/|_| |_| |_|\___| _\__\___/ __\__|_| |_|\___|    _ _                     .-#*.      :*=. =*: 
+     / ___| ___ _ __ |  _ \(_)_ __   ___  ___  \ \      / (_)______ _ _ __ __| | |                 .-#*.       .=#+=#*=**:
+    | |  _ / _ \ '_ \| |_) | | '_ \ / _ \/ __|  \ \ /\ / /| |_  / _` | '__/ _` | |              .:##:        .=#=     :*%+. 
+    | |_| |  __/ | | |  __/| | |_) |  __/\__ \   \ V  V / | |/ / (_| | | | (_| |_|              ++.          =%- 
+     \____|\___|_| |_|_|   |_| .__/ \___||___/    \_/\_/  |_/___\__,_|_|  \__,_(_)              .#-         .+=   
+                             |_|                                                                -*:            -#.
+                                                                                                :#*%@%=:  :+%@@*.-#:
+    The GenPipes Wizard will help you select the appropriate deployment method,                  *+.            .++
+    pipeline, protocol, and/or construct the command to run GenPipes.                    :*%%%%*=**:  ..:.....    .+#-+#%%#*:
+                                                                                    .#%+:...    .*=                -#-     ..:+%#:  
+    Press Ctrl+C at any time to exit the wizard.                                  #+.          .+##=.          .=#%%-          .=#.    
+                                                                                %=              .:-=*%%%%%#+=-:.              -%.
+    Let's begin!                                                                  .-*#=.                                    .=##=
+                                                                                    .:=+*#**+=-:.                .:-=+**#*+=:. 
+                                                                                            ..:---====+=++++=+===----:..
+    """)                                                            
+    start_json_file = "general_guide.json"
+    start = Wizard(start_json_file)
+    start.tree_traversal()
 
 if __name__ == "__main__":
     main()
