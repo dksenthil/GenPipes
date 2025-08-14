@@ -53,23 +53,23 @@
             "type": "selection",
             "question": "Select the SLURM server you want to use:",
             "choices": [
-                {"label": "Beluga", "node": "beluga_server_ini"},
-                {"label": "Cedar", "node": "cedar_server_ini"},
+                {"label": "Rorqual", "node": "rorqual_server_ini"},
+                {"label": "Fir", "node": "fir_server_ini"},
                 {"label": "Narval", "node": "narval_server_ini"}
             ]
         },
         {
-            "id": "beluga_server_ini", 
+            "id": "rorqual_server_ini", 
             "type": "set_variable",
             "variable": "scheduler_server_name",
-            "value": "beluga",
+            "value": "rorqual",
             "next": "store_name_for_server_ini"
         },
         {
-            "id": "cedar_server_ini", 
+            "id": "fir_server_ini", 
             "type": "set_variable",
             "variable": "scheduler_server_name",
-            "value": "cedar",
+            "value": "fir",
             "next": "store_name_for_server_ini"
         },
         {
@@ -176,8 +176,8 @@
             "cases": {
                 "abacus": {"node": "c_command_construction_abacus_no_custom"},
                 "batch": {"node": "c_command_construction_no_custom"},
-                "beluga": {"node": "c_command_construction_no_custom" },
-                "cedar": {"node": "c_command_construction_no_custom"},
+                "rorqual": {"node": "c_command_construction_no_custom" },
+                "fir": {"node": "c_command_construction_no_custom"},
                 "narval": {"node": "c_command_construction_no_custom"}
             }
         },
@@ -188,8 +188,8 @@
             "cases": {
                 "abacus": {"node": "c_command_construction_abacus_with_custom"},
                 "batch": {"node": "c_command_construction_with_custom"},
-                "beluga": {"node": "c_command_construction_with_custom" },
-                "cedar": {"node": "c_command_construction_with_custom"},
+                "rorqual": {"node": "c_command_construction_with_custom" },
+                "fir": {"node": "c_command_construction_with_custom"},
                 "narval": {"node": "c_command_construction_with_custom"}
             }
         },
