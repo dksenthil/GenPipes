@@ -239,22 +239,22 @@
                 },
                 {
                     "label": "No",
-                    "next": "input_directory_name"
+                    "next": "input_directory_path"
                 }
             ]
         },
         {
-            "id": "input_directory_name",
+            "id": "input_directory_path",
             "type": "input",
-            "variable": "directory_name",
-            "prompt": "Enter the name of the directory you want to run the pipeline in", 
-            "next": "store_directory_name"
+            "variable": "directory_path",
+            "prompt": "Enter the path to the directory you want to run the pipeline in", 
+            "next": "store_directory_path"
         },
         {
-            "id": "store_directory_name",
+            "id": "store_directory_path",
             "type": "set_variable",
             "variable": "o_command",
-            "value": "-o {{directory_name}}",
+            "value": "-o {{directory_path}}",
             "next": "initialize_d_command"
         },
         {

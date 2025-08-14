@@ -277,10 +277,10 @@ class Wizard:
                             logger.error("ERROR! You must enter a path to the custom ini name. Please try again.")
                             self.add_space()
                             continue
-                    if variable == "directory_name":
+                    if variable == "directory_path":
                         if not input.strip():
                             self.add_space()
-                            logger.error("ERROR! You must enter a directory name. Please try again.")
+                            logger.error("ERROR! You must enter a path to the directory . Please try again.")
                             self.add_space()
                             continue
                     if variable == "g_filename":
@@ -343,7 +343,7 @@ class Wizard:
 
         #If user skips o command --> dont want -o in the final command
         o_command = self.variables.get("o_command", "").strip()
-        if not self.variables.get("directory_name"):
+        if not self.variables.get("directory_path"):
             o_command = ""
         self.variables["o_command"] = o_command
 
