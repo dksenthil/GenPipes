@@ -280,7 +280,7 @@ class Wizard:
                     if variable == "directory_path":
                         if not input.strip():
                             self.add_space()
-                            logger.error("ERROR! You must enter a path to the directory . Please try again.")
+                            logger.error("ERROR! You must enter a full path name to the directory. Please try again.")
                             self.add_space()
                             continue
                     if variable == "g_filename":
@@ -451,7 +451,7 @@ def main():
      \____|\___|_| |_|_|   |_| .__/ \___||___/    \_/\_/  |_/___\__,_|_|  \__,_(_)              .#-         .+=   
                              |_|                                                                -*:            -#.
                                                                                                 :#*%@%=:  :+%@@*.-#:
-    The GenPipes Wizard will help you select the appropriate deployment method,                  *+.            .++
+    The GenPipes Wizard will help you select an appropriate deployment method,                   *+.            .++
     pipeline, protocol, and/or construct the command to run GenPipes.                    :*%%%%*=**:  ..:.....    .+#-+#%%#*:
                                                                                     .#%+:...    .*=                -#-     ..:+%#:  
     Press Ctrl+C at any time to exit the wizard.                                  #+.          .+##=.          .=#%%-          .=#.    
