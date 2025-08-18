@@ -60,7 +60,7 @@
         {
             "id": "germline_question",
             "type": "confirm",
-            "question": "Does your dataset have high coverage (suitable for low-frequency variation)?",
+            "question": "Is your dataset a result of targeted sequencing, such as a panel of genes?",
             "options": [
                 {
                     "label": "Yes",
