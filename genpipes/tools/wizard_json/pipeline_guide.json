@@ -7,16 +7,27 @@
     "nodes": [
         {
             "id": "start_pipeline_guide",
-            "type": "confirm",
-            "question": "Did your dataset originate from DNA samples?",
-            "options": [
+            "type": "selection",
+            "question": "Select your dataset type:",
+            "choices": [
                 {
-                    "label": "Yes",
-                    "next": "chip_dna_longread_methyl_seq_question"
+                    "label": "DNA samples",
+                    "node": "chip_dna_longread_methyl_seq_question"
                 },
                 {
-                    "label": "No",
-                    "next": "rnaseq_question"
+                    "label": "RNA samples",
+                    "node": "3_rnaseq_question"
+                },
+                {
+                    "label": "COVID samples",
+                    "node": "nanopore_cov_seq_question"
+                },
+                {
+                    "label": "Amplicon samples",
+                    "node": {
+                        "external": "general_guide.json",
+                        "entryPoint": "ampliconseq_pipeline_selected"
+                    }
                 }
             ]
         },
@@ -98,21 +109,6 @@
             ]
         },
         {
-            "id": "rnaseq_question",
-            "type": "confirm",
-            "question": "Did your dataset originate from RNA samples?",
-            "options": [
-                {
-                    "label": "Yes",
-                    "next": "3_rnaseq_question"
-                },
-                {
-                    "label": "No",
-                    "next": "covid_question"
-                }
-            ]
-        },
-        {
             "id": "3_rnaseq_question",
             "type": "confirm",
             "question": "Did your dataset originate from a non-model organism?",
@@ -149,24 +145,6 @@
                     "next": {
                         "external": "general_guide.json",
                         "entryPoint": "rnaseq_light_pipeline_selected"
-                    }
-                }
-            ]
-        },
-        {
-            "id": "covid_question",
-            "type": "confirm",
-            "question": "Do you want to analyze COVID samples?",
-            "options": [
-                {
-                    "label": "Yes",
-                    "next": "nanopore_cov_seq_question"
-                },
-                {
-                    "label": "No",
-                    "next": {
-                        "external": "general_guide.json",
-                        "entryPoint": "ampliconseq_pipeline_selected"
                     }
                 }
             ]
