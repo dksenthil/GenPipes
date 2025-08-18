@@ -97,37 +97,19 @@
         },
         {
             "id": "somatic_question",
-            "type": "confirm",
-            "question": "Do you have a matched tumor and normal samples?",
-            "options": [
+            "type": "selection",
+            "question": "Do you have a matched tumor and normal samples or do you only have a tumor sample?",
+            "choices": [
                 {
-                    "label": "Yes",
-                    "next": {
-                        "external": "general_guide.json",
-                        "entryPoint": "somatic_ensemble_protocol_selected"
-                    }
+                    "label": "Matched tumor and normal samples",
+                    "node": "somatic_sv_question"
                 },
                 {
-                    "label": "No",
-                    "next": "tumor_only_question"
-                }
-            ]
-        },
-        {
-            "id": "tumor_only_question",
-            "type": "confirm",
-            "question": "Do you only have a tumor sample?",
-            "options": [
-                {
-                    "label": "Yes",
-                    "next": {
+                    "label": "Only a tumor sample",
+                    "node": {
                         "external": "general_guide.json",
                         "entryPoint": "somatic_tumor_only_protocol_selected"
                     }
-                },
-                {
-                    "label": "No",
-                    "next": "somatic_sv_question"
                 }
             ]
         },
@@ -145,9 +127,27 @@
                 },
                 {
                     "label": "No",
-                    "next": {
+                    "next": "fastpass_ensemble_question"
+                }
+            ]
+        },
+        {
+            "id": "fastpass_ensemble_question",
+            "type": "selection",
+            "question": "Do you want to perform a quick assessment or use an ensemble approach to detect somatic mutations?",
+            "choices": [
+                {
+                    "label": "Quick assessment",
+                    "node": {
                         "external": "general_guide.json",
                         "entryPoint": "somatic_fastpass_protocol_selected"
+                    }
+                },
+                {
+                    "label": "Ensemble approach",
+                    "node": {
+                        "external": "general_guide.json",
+                        "entryPoint": "somatic_ensemble_protocol_selected"
                     }
                 }
             ]
