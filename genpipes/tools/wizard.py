@@ -201,11 +201,9 @@ class Wizard:
                 variable = node["variable"]
                 raw_value = node["value"]
 
-                if variable in ("r_command", "path_custom_ini", "g_command", "d_command", "p_command"):
+                if variable in ("r_command", "path_custom_ini", "g_command", "d_command", "p_command", "genome_config_ini", "o_command"):
                     self.fix_filenames()
 
-                if "o_command" in variable:
-                    self.fix_filenames()
 
                 updated_value = self.apply_variables(raw_value)
 
@@ -289,6 +287,12 @@ class Wizard:
                             logger.error("ERROR! You must enter a file name. Please try again.")
                             self.add_space()
                             continue
+                    if variable == "reference_genome_ini_filename":
+                        if not input.strip():
+                            self.add_space()
+                            logger.error("ERROR! You must enter a file name. Please try again.")
+                            self.add_space()
+                            continue
 
                     if variable == "step_range":
                         if not self.valid_step_range():
@@ -307,24 +311,6 @@ class Wizard:
         """
         Handle cases where user includes/doesn't include .txt/ini/sh to their input
         """
-
-        '''
-        readset_filename = self.variables.get("raw_readset_filename", "").strip()
-        if readset_filename and not readset_filename.endswith(".txt"):
-            readset_filename += ".txt"
-        self.variables["raw_readset_filename"] = readset_filename
-
-        design_filename = self.variables.get("design_file_name", "").strip()
-        if design_filename and not design_filename.endswith(".txt"):
-            design_filename += ".txt"
-        self.variables["design_file_name"] = design_filename
-
-        pair_filename = self.variables.get("pair_file_name", "").strip()
-        if pair_filename and not pair_filename.endswith(".txt"):
-            pair_filename += ".txt"
-        self.variables["pair_file_name"] = pair_filename
-        '''
-
         path_custom_ini = self.variables.get("raw_path_custom_ini", "").strip()
         if path_custom_ini and not path_custom_ini.endswith(".ini"):
             path_custom_ini += ".ini"
@@ -346,6 +332,11 @@ class Wizard:
         if not self.variables.get("directory_path"):
             o_command = ""
         self.variables["o_command"] = o_command
+
+        reference_genome_ini_filename = self.variables.get("reference_genome_ini_filename", "").strip()
+        if reference_genome_ini_filename and not reference_genome_ini_filename.endswith(".ini"):
+            reference_genome_ini_filename += ".ini"
+        self.variables["reference_genome_ini_filename"] = reference_genome_ini_filename
 
     def valid_step_range(self):
         """

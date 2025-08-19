@@ -198,27 +198,85 @@
             "type": "set_variable",
             "variable": "c_command",
             "value": "-c $GENPIPES_INIS/{{pipeline_name}}/{{pipeline_name}}.base.ini",
-            "next": "initialize_o_command"
+            "next": "c_command_genome_question"
         },
         {
             "id": "c_command_construction_no_custom",
             "type": "set_variable",
             "variable": "c_command",
             "value": "-c $GENPIPES_INIS/{{pipeline_name}}/{{pipeline_name}}.base.ini $GENPIPES_INIS/common_ini/{{scheduler_server_name}}.ini",
-            "next": "initialize_o_command"
+            "next": "c_command_genome_question"
         },
         {
             "id": "c_command_construction_abacus_with_custom",
             "type": "set_variable",
             "variable": "c_command",
             "value": "-c $GENPIPES_INIS/{{pipeline_name}}/{{pipeline_name}}.base.ini $GENPIPES_INIS/{{pipeline_name}}/{{path_custom_ini}}",
-            "next": "initialize_o_command"
+            "next": "c_command_genome_question"
         },
         {
             "id": "c_command_construction_with_custom",
             "type": "set_variable",
             "variable": "c_command",
             "value": "-c $GENPIPES_INIS/{{pipeline_name}}/{{pipeline_name}}.base.ini $GENPIPES_INIS/common_ini/{{scheduler_server_name}}.ini $GENPIPES_INIS/{{pipeline_name}}/{{path_custom_ini}}",
+            "next": "c_command_genome_question"
+        },
+        {
+            "id": "c_command_genome_question",
+            "type": "selection",
+            "question": "Select the reference genome to use when running the pipeline:",
+            "choices": [
+                {
+                    "label": "Human GRCh38 (default)",
+                    "node": "initialize_o_command"
+                },
+                {
+                    "label": "Mouse",
+                    "node": "mouse_ref_genome"
+                },
+                {
+                    "label": "Rat",
+                    "node": "rat_ref_genome"
+                },
+                {
+                    "label": "Other",
+                    "node": "other_ref_genome_input_name"
+                }
+            ]
+        },
+        {
+            "id": "mouse_ref_genome",
+            "type": "set_variable",
+            "variable": "genome_config_ini",
+            "value": "$MUGQIC_INSTALL_HOME/genomes/species/Mus_musculus.mm10/Mus_musculus.mm10.ini",
+            "next": "initialize_o_command"
+        },
+        {
+            "id": "rat_ref_genome",
+            "type": "set_variable",
+            "variable": "genome_config_ini",
+            "value": "$MUGQIC_INSTALL_HOME/genomes/species/Rattus_norvegicus.Rnor_6.0/Rattus_norvegicus.Rnor_6.0.ini",
+            "next": "initialize_o_command"
+        },
+        {
+            "id": "other_ref_genome_input_name",
+            "type": "input",
+            "variable": "reference_genome_name",
+            "prompt": "Enter the name of the reference genome. The various genome settings are available in $MUGQIC_INSTALL_HOME/genomes/species/", 
+            "next": "other_ref_genome_input_ini"
+        },
+        {
+            "id": "other_ref_genome_input_ini",
+            "type": "input",
+            "variable": "reference_genome_ini_filename",
+            "prompt": "Enter the reference genome ini filename:", 
+            "next": "other_ref_genome"
+        },
+        {
+            "id": "other_ref_genome",
+            "type": "set_variable",
+            "variable": "genome_config_ini",
+            "value": "$MUGQIC_INSTALL_HOME/genomes/species/{{reference_genome_name}}/{{reference_genome_ini_filename}}", 
             "next": "initialize_o_command"
         },
         {
@@ -428,7 +486,7 @@
             "id": "command_construction",
             "type": "set_variable",
             "variable": "final_command",
-            "value": "genpipes {{pipeline_name}} {{t_command}} {{c_command}} {{r_command}} {{d_command}} {{p_command}} {{j_command}} {{s_command}} {{o_command}} {{g_command}}",
+            "value": "genpipes {{pipeline_name}} {{t_command}} {{c_command}} {{genome_config_ini}} {{r_command}} {{d_command}} {{p_command}} {{j_command}} {{s_command}} {{o_command}} {{g_command}}",
             "next": "end"
         },
         {
