@@ -111,7 +111,7 @@
         {
             "id": "3_rnaseq_question",
             "type": "confirm",
-            "question": "Did your dataset originate from a non-model organism?",
+            "question": "Did your dataset originate from a well-annotated reference genome?",
             "options": [
                 {
                     "label": "Yes",
