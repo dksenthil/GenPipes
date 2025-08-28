@@ -141,7 +141,7 @@ Parameters:
                     #check the highest position of any ambiguous nucleotide
                     for item in prim_adap_list:
                         for char in ambi_char:
-                            check_ambi_pos = item.rfind(f'char')
+                            check_ambi_pos = item.rfind(f'{char}')
                             headcrop_value = max(headcrop_value, check_ambi_pos + 1)
 
             if readset.run_type == "PAIRED_END":
