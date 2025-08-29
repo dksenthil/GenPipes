@@ -10,7 +10,7 @@ GenPipes consists of Python scripts which create a list of jobs running Bash com
 On this page:
 
 * [Software requirement](#software-requirement)
-* [Quick setup for Abacus, Beluga, Narval, Graham and Cedar users](#quick-setup-for-abacus-beluga-narval-graham-and-cedar-users)
+* [Quick setup for Abacus, Rorqual, Narval, Nibi and Fir users](#quick-setup-for-abacus-rorqual-narval-nibi-and-fir-users)
 * [Download and setup for external users](#download-and-setup-for-external-users)
     * [Download](#download)
     * [Installation](#installation)
@@ -45,7 +45,7 @@ GenPipes has been tested with Python 3.11.1 and 3.12.2
 It may work with other versions of python, but this has not been extensively tested. 
 
 
-Quick setup for Abacus, Beluga, Narval, Graham and Cedar users
+Quick setup for Abacus, Rorqual, Narval, Nibi and Fir users
 --------------------------------------------------------------
 Genomes and modules used by the pipelines are already installed on a CVMFS partition mounted on all those clusters in `/cvmfs/soft.mugqic/root`.
 To access them, add the following lines to your *$HOME/.bash_profile*:
@@ -57,11 +57,11 @@ export MUGQIC_INSTALL_HOME=/cvmfs/soft.mugqic/root
 module use $MUGQIC_INSTALL_HOME/modulefiles
 ```
 
-For MUGQIC analysts, add the following lines to your *$HOME/.bash_profile*:
+For C3G analysts, add the following lines to your *$HOME/.bash_profile*:
 
 ```bash
 umask 0006
-# MUGQIC genomes and modules for MUGQIC analysts
+# MUGQIC genomes and modules for C3G analysts
 HOST=`hostname`;
 DNSDOMAIN=`dnsdomainname`;
 export MUGQIC_INSTALL_HOME=/cvmfs/soft.mugqic/root
@@ -69,11 +69,11 @@ if [[ $HOST == abacus* || $DNSDOMAIN == ferrier.genome.mcgill.ca ]]; then
   export MUGQIC_INSTALL_HOME_DEV=/lb/project/mugqic/analyste_dev
 elif [[ $HOST == ip* || $DNSDOMAIN == m  ]]; then
   export MUGQIC_INSTALL_HOME_DEV=/project/6007512/C3G/analyste_dev
-elif [[ $HOST == cedar* || $DNSDOMAIN == cedar.computecanada.ca ]]; then
+elif [[ $HOST == fir* || $DNSDOMAIN == fir.alliancecan.ca ]]; then
   export MUGQIC_INSTALL_HOME_DEV=/project/6007512/C3G/analyste_dev
-elif [[ $HOST == beluga* || $DNSDOMAIN == beluga.computecanada.ca ]]; then
+elif [[ $HOST == rorqual* || $DNSDOMAIN == rorqual.alliancecan.ca ]]; then
   export MUGQIC_INSTALL_HOME_DEV=/project/6007512/C3G/analyste_dev
-elif [[ $HOST == narval* || $DNSDOMAIN == narval.computecanada.ca ]]; then
+elif [[ $HOST == narval* || $DNSDOMAIN == narval.alliancecan.ca ]]; then
   export MUGQIC_INSTALL_HOME_DEV=/project/rrg-bourqueg-ad/C3G/analyste_dev
 fi
 module use $MUGQIC_INSTALL_HOME/modulefiles $MUGQIC_INSTALL_HOME_DEV/modulefiles
@@ -501,12 +501,12 @@ You can also add a list of other configuration files to `--config`.
 Files are read in the list order and each parameter value is overwritten if redefined in the next file.
 
 This is useful to customize settings for a specific cluster or genome.
-Each cluster has a special configuration file available (for example, `beluga.ini` and `narval.ini`) in the common_ini directory.
+Each cluster has a special configuration file available (for example, `rorqual.ini` and `narval.ini`) in the common_ini directory.
 And various genome settings are available in `$MUGQIC_INSTALL_HOME/genomes/species/`.
 
-For example, to run the DNA-Seq pipeline on the beluga cluster with *Mus musculus* reference genome:
+For example, to run the DNA-Seq pipeline on the rorqual cluster with *Mus musculus* reference genome:
 ```bash
-genpipes dnaseq --config $GENPIPES_INIS/dnaseq/dnaseq.base.ini $GENPIPES_INIS/common_ini/beluga.ini $MUGQIC_INSTALL_HOME/genomes/species/Mus_musculus.GRCm38/Mus_musculus.GRCm38.ini ...
+genpipes dnaseq --config $GENPIPES_INIS/dnaseq/dnaseq.base.ini $GENPIPES_INIS/common_ini/rorqual.ini $MUGQIC_INSTALL_HOME/genomes/species/Mus_musculus.GRCm38/Mus_musculus.GRCm38.ini ...
 ```
 
 
@@ -615,7 +615,7 @@ id  name    status  user    node    priority    submit_time eligible_time   star
 
 A Note about non-Alliance Clusters
 ------------
-The default scheduler in GenPipes is the SLURM scheduler. Beluga, Narval, Cedar and Graham use the SLURM scheduler. To use GenPipes on abacus, don't forget to add the "-j pbs" option.
+The default scheduler in GenPipes is the SLURM scheduler. Rorqual, Narval, Fir and Nibi use the SLURM scheduler. To use GenPipes on abacus, don't forget to add the "-j pbs" option.
 
 Call home
 ---------
