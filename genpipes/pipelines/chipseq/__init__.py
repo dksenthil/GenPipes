@@ -986,7 +986,7 @@ done""".format(
                 # Set essential variables - fingerprint
                 fingerprint_plot = os.path.join(output_sample_dir, f"{sample.name}_fingerprint.png")
                 fingerprint_matrix = os.path.join(output_sample_dir, f"{sample.name}_counts.txt")
-                
+
                 sample_bam_files.extend(self.select_input_files(candidate_bam_files))
                 sample_bam_names.append(f"{sample.name}.{mark_name}")
 
@@ -1001,7 +1001,7 @@ done""".format(
                         deeptools.plot_fingerplot(
                             sample_bam_files,
                             sample_bam_names,
-                            fingerprint_plot, 
+                            fingerprint_plot,
                             fingerprint_matrix
                         ),
                         bash.ln(
@@ -1017,7 +1017,7 @@ done""".format(
             self.multiqc_inputs.append(os.path.join(link_directory, f"{sample.name}_counts.txt"))
 
         # Set output files
-        summ_matrix = os.path.join(output_dir, "BamSummResults.npz.txt")
+        summ_matrix = os.path.join(output_dir, "BamSummResults.npz")
         corr_plot = os.path.join(output_dir, "corrMatrix.png")
         corr_table = os.path.join(output_dir, "corrMatrixCounts.txt")
 
@@ -1030,7 +1030,7 @@ done""".format(
                         all_bam_files,
                         summ_matrix
                     ),
-                    deeptools.plot_correlation( 
+                    deeptools.plot_correlation(
                         summ_matrix,
                         all_bam_names,
                         corr_plot,
@@ -1042,11 +1042,11 @@ done""".format(
                         input_file = corr_plot
                     )
                 ],
-                name = f"deeptools_qc.corrMatrix",
+                name = "deeptools_qc.corrMatrix",
                 samples=self.samples
             )
         )
-        self.multiqc_inputs.append(os.path.join(link_directory, f"corrMatrixCounts.txt"))
+        self.multiqc_inputs.append(os.path.join(link_directory, "corrMatrixCounts.txt"))
 
         return jobs
 
@@ -1952,14 +1952,14 @@ done""",
                 self.metrics,
                 self.homer_make_tag_directory, #10
                 self.qc_metrics,
-                self.deeptools_qc,    
-                self.homer_make_ucsc_file,  
+                self.deeptools_qc,
+                self.homer_make_ucsc_file,
                 self.macs2_callpeak,
                 self.homer_annotate_peaks, #15
                 self.homer_find_motifs_genome,
                 self.annotation_graphs,
-                self.run_spp, 
-                self.differential_binding, 
+                self.run_spp,
+                self.differential_binding,
                 self.ihec_metrics, #20
                 self.multiqc_report,
                 self.cram_output,
@@ -1978,6 +1978,7 @@ done""",
                 self.metrics,
                 self.homer_make_tag_directory,
                 self.qc_metrics,
+                self.deeptools_qc,
                 self.homer_make_ucsc_file,
                 self.macs2_atacseq_callpeak,
                 self.homer_annotate_peaks,
