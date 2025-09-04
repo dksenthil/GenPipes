@@ -1,5 +1,5 @@
-# Organization of Wizard JSON Files (refer to GenPipes_Wizard.drawio for visualization of the decision trees)
-
+# Organization of Wizard JSON Files 
+note: refer to GenPipes_Wizard.drawio (https://drive.google.com/file/d/1A2Zy3i0v-PikoXVyaDM1rSYpjAbEmRrn/view?usp=sharing) for visualization of the decision trees
 ---------------------------------
 File Structure
 ---------------------------------
