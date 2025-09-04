@@ -1,3 +1,4 @@
+#!/usr/bin/env Rscript
 
 ################################################################################
 # Copyright (C) 2025 C3G, The Victor Phillip Dahdaleh Institute of Genomic Medicine at McGill University
