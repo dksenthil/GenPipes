@@ -105,15 +105,11 @@ def run_csvtoreadset(args):
     cmd = ['Rscript', csvtoreadset, args.input_csv, args.output_name, args.input_type, args.data_path]
     subprocess.run(cmd, check=False)
     """
-    csvtoreadset = os.path.join(os.path.dirname(__file__), 'csvtoreadset.R')
-    cmd = (
-        "module load mugqic/R_Bioconductor/3.6.1_3.10 && "
-        f"Rscript {csvtoreadset} {args.input_csv} {args.output_name} "
-        f"{args.input_type} {args.data_path}"
-    )
+    csvtoreadset = os.path.join(os.path.dirname(__file__), 'csvToreadset.R')
+    cmd = f"""\
+module load mugqic/R_Bioconductor/3.6.1_3.10 &&
+Rscript {csvtoreadset} {args.input_csv} {args.output_name} {args.input_type} {args.data_path}"""
     subprocess.run(["bash", "-c", cmd], check=False)
-
-    
 
 def run_job2json_project_tracking(args):
     """
