@@ -17,45 +17,39 @@
 # along with GenPipes.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
+import os
+
 # MUGQIC Modules
 from ..core.config import global_conf
 from ..core.job import Job
 
 
-def minimap2_ont(
-    input,
-    read_group,
-    out_sam=None,
-    ini_section='minimap2_ont'
+def pileup(
+    input_bam,
+    output_bed,
+    ini_section='modkit'
     ):
     """
-    Align nanopore reads to a reference using minimap2.
+    Summarize methylation data from Oxford Nanopore Reads with Modkit.
 
-    :return: a job for nanopore alignment
+    :return: a job for modkit methylation analysis
     """
 
-    genome_fasta = global_conf.global_get(ini_section, 'genome_fasta', required=True)
-
     return Job(
-        [input],
-        [out_sam],
+        [input_bam],
+        [output_bed],
         [
-            [ini_section, "module_minimap2"]
+            [ini_section, "module_modkit"],
         ],
         command="""\
-minimap2 \\
-  -t {threads} \\
-  -ax {minimap_preset} {other_options} \\
-  -R {read_group} \\
-  {genome_fasta} \\
-  {input}{out_sam}""".format(
-            threads=global_conf.global_get(ini_section, 'threads'),
-            minimap_preset=global_conf.global_get(ini_section, 'preset'),
-            read_group=read_group,
-            other_options=global_conf.global_get(ini_section, 'minimap2_other_options', required=False),
-            genome_fasta=genome_fasta,
-            input=input + "/*.fastq*" if input else "-",
-            out_sam=" \\\n  > " + out_sam if out_sam else ""
-        ),
-        removable_files=[out_sam]
+modkit pileup \\
+  {input_bam} \\
+  {output_bed} \\
+  --ref {genome_fasta} \\
+  {other_options}""".format(
+            input_bam=input_bam,
+            output_bed=output_bed,
+            genome_fasta=global_conf.global_get(ini_section, 'genome_fasta'),
+            other_options=global_conf.global_get(ini_section, 'other_options', required=False)
+        )
     )

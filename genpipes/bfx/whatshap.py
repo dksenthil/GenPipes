@@ -22,40 +22,35 @@ from ..core.config import global_conf
 from ..core.job import Job
 
 
-def minimap2_ont(
-    input,
-    read_group,
-    out_sam=None,
-    ini_section='minimap2_ont'
+def haplotag(
+    input_bam,
+    input_vcf,
+    output_bam,
+    ini_section='whatshap'
     ):
     """
-    Align nanopore reads to a reference using minimap2.
+    Create a haplotagged bam file with Whatshap.
 
-    :return: a job for nanopore alignment
+    :return: a job for whatshap haplotagging
     """
 
-    genome_fasta = global_conf.global_get(ini_section, 'genome_fasta', required=True)
-
     return Job(
-        [input],
-        [out_sam],
+        [input_bam, input_vcf],
+        [output_bam],
         [
-            [ini_section, "module_minimap2"]
+            [ini_section, "module_whatshap"],
         ],
         command="""\
-minimap2 \\
-  -t {threads} \\
-  -ax {minimap_preset} {other_options} \\
-  -R {read_group} \\
-  {genome_fasta} \\
-  {input}{out_sam}""".format(
-            threads=global_conf.global_get(ini_section, 'threads'),
-            minimap_preset=global_conf.global_get(ini_section, 'preset'),
-            read_group=read_group,
-            other_options=global_conf.global_get(ini_section, 'minimap2_other_options', required=False),
-            genome_fasta=genome_fasta,
-            input=input + "/*.fastq*" if input else "-",
-            out_sam=" \\\n  > " + out_sam if out_sam else ""
-        ),
-        removable_files=[out_sam]
+whatshap haplotag \\
+  -o {output_bam} \\
+  {other_options} \\
+  --reference {genome_fasta} \\
+  {input_vcf} \\
+  {input_bam}""".format(
+            input_bam=input_bam,
+            input_vcf=input_vcf,
+            output_bam=output_bam,
+            genome_fasta=global_conf.global_get(ini_section, 'genome_fasta'),
+            other_options=global_conf.global_get(ini_section, 'other_options', required=False)
+        )
     )

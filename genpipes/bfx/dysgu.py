@@ -17,53 +17,45 @@
 # along with GenPipes.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-import os
-
 # MUGQIC Modules
 from ..core.config import global_conf
 from ..core.job import Job
 
-
-def qc(
-    output_dir,
-    output_prefix,
-    input_bam=None,
-    input_fastq=None,
-    input_summary=None,
-    aligned = False,
-    ini_section='nanoplot'
-    ):
+def call(
+    input_bam,
+    output_vcf,
+    region,
+    ini_section="dysgu"):
     """
-    QC metrics with NanoPlot.
+    Call structural variants with dysgu.
 
-    :return: a job for NanoPlot QC
+    :return: a job for dysgu structural variant calling
     """
-
-    output = [
-        os.path.join(output_dir, output_prefix + "NanoPlot-report.html"),
-        os.path.join(output_dir, output_prefix + "NanoStats.txt")
-    ]
-
-    bam_flag = "--ubam " if aligned==False else "--bam "
 
     return Job(
-        [input_bam, input_fastq],
-        output,
+        [input_bam],
+        [output_vcf],
         [
-            [ini_section, "module_nanoplot"]
+            [ini_section, "module_dysgu"],
         ],
         command="""\
-NanoPlot {other_options} \\
-  {input_bam} {input_fastq} {input_summary} \\
-  -o {output_dir} \\
-  -p {output_prefix} \\
-  --threads {threads}""".format(
+dysgu call {other_options} \\
+    --procs {threads} \\
+    --mode {mode} --overwrite \\
+    -f vcf \\
+    -o {output} \\
+    {region} {region_setting} \\
+    {genome_fasta} \\
+    {tmp} \\
+    {input}""".format(
             other_options=global_conf.global_get(ini_section, 'other_options', required=False),
-            input_bam=bam_flag + input_bam if input_bam else "",
-            input_fastq="--fastq " + input_fastq if input_fastq else "",
-            input_summary="--summary " + input_summary if input_summary else "",
             threads=global_conf.global_get(ini_section, 'threads'),
-            output_dir=output_dir,
-            output_prefix=output_prefix
+            mode=global_conf.global_get(ini_section, 'mode'),
+            output=output_vcf,
+            region="--search " + {region} if region else "",
+            region_setting=global_conf.global_get(ini_section, 'region_strategy') if region and global_conf.global_get(ini_section, 'region_strategy', required=False) else "",
+            genome_fasta=global_conf.global_get(ini_section, 'genome_fasta'),
+            tmp=global_conf.global_get(ini_section, 'tmp_dir'),
+            input=input_bam
         )
     )

@@ -369,6 +369,28 @@ python3 $PYTHON_TOOLS/format2pcgr.py \\
         )
     )
 
+def savana2cnvkit(
+        input,
+        output,
+        ini_section="savana2cnvkit"
+        ):
+    
+    return Job(
+        [input],
+        [output],
+        [
+            [ini_section, "module_c3g_tools"],
+            [ini_section, "module_python"]
+        ],
+        command="""\
+python $PYTHON_TOOLS/savana2cnvkit.py \\
+    --input {input} \\
+    --output {output}""".format(
+        input=input,
+        output=output
+        )
+    )
+
 def chunkBedbyFileNumber(
         input,
         output,
@@ -1360,6 +1382,52 @@ Rscript $R_TOOLS/somaticSignatureAlexandrov.R \\
         input=input,
         output=output
         ),removable_files=remove_file
+    )
+
+def r_qdna_seq(
+        input,
+        output_dir,
+        sample,
+        size='15',
+        ini_section='qdnaseq'
+    ):
+
+    reference = global_conf.global_get(ini_section, "reference")
+
+    outputs = [
+        os.path.join(output_dir, f"{sample}.copy_number_calls.{size}k.{reference}.pdf"),
+        os.path.join(output_dir, f"{sample}.copy_number_segmented.{size}k.{reference}.pdf"),
+        os.path.join(output_dir, f"{sample}.copy_number_smooth.{size}k.{reference}.pdf"),
+        os.path.join(output_dir, f"{sample}.noise_plot.{size}k.{reference}.pdf"),
+        os.path.join(output_dir, f"{sample}.isobarPlot.{size}k.{reference}.pdf"),
+        os.path.join(output_dir, f"{sample}.read_counts_per_bin.{size}k.{reference}.pdf"),
+        os.path.join(output_dir, f"{sample}.CNV.{size}k.{reference}.bed"),
+        os.path.join(output_dir, f"{sample}.CNV.{size}k.{reference}.tsv"),
+        os.path.join(output_dir, f"{sample}.CNV.{size}k.{reference}.igv"),
+        os.path.join(output_dir, f"{sample}.CNV_calls.{size}k.{reference}.vcf"),
+        os.path.join(output_dir, f"{sample}.CNV_calls.{size}k.{reference}.seg")
+    ]
+
+    return Job(
+        [input],
+        outputs,
+        [
+            [ini_section, 'module_c3g_tools'],
+            [ini_section, 'module_R']
+        ],
+        command="""\
+Rscript $R_TOOLS/runQDNAseq.R \\
+    -i {input} \\
+    -o {output_dir} \\
+    -b {size} \\
+    -r {reference} \\
+    -s {sample}""".format(
+        input=input,
+        output_dir=output_dir,
+        size=size,
+        reference=reference,
+        sample=sample
+        )
     )
 
 def design_report(
