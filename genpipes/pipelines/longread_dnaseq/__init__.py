@@ -1602,7 +1602,7 @@ For information on the structure and contents of the LongRead readset file, plea
         for sample in self.samples:
             annotsv_directory = os.path.join(self.output_dirs["annotsv_directory"], sample.name)
             svariants_dir = os.path.join(self.output_dirs["SVariants_directory"], sample.name)
-            hificnv_vcf = os.path.join(svariants_dir, "hificnv", f"{sample.name}.filt.vcf.gz")
+            hificnv_vcf = os.path.join(svariants_dir, "hificnv", f"{sample.name}.hificnv.filt.vcf.gz")
             sawfish_vcf = os.path.join(svariants_dir, "sawfish", f"{sample.name}.sawfish.flt.vcf.gz")
             deepvariant_vcf = os.path.join(self.output_dirs["variants_directory"], sample.name, "deepvariant", f"{sample.name}.deepvariant.flt.vcf.gz")
 
