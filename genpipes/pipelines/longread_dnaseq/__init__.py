@@ -1606,8 +1606,8 @@ For information on the structure and contents of the LongRead readset file, plea
             sawfish_vcf = os.path.join(svariants_dir, "sawfish", f"{sample.name}.sawfish.flt.vcf.gz")
             deepvariant_vcf = os.path.join(self.output_dirs["variants_directory"], sample.name, "deepvariant", f"{sample.name}.deepvariant.flt.vcf.gz")
 
-            hificnv_dir = os.path.join(annotsv_directory, sample.name, "hificnv")
-            sawfish_dir = os.path.join(annotsv_directory, sample.name, "sawfish")
+            hificnv_dir = os.path.join(annotsv_directory, "hificnv")
+            sawfish_dir = os.path.join(annotsv_directory, "sawfish")
             hificnv_annot = os.path.join(hificnv_dir, f"{sample.name}.hificnv.annotsv.tsv")
             sawfish_annot = os.path.join(sawfish_dir, f"{sample.name}.sawfish.annotsv.tsv")
 
