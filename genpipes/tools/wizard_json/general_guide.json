@@ -1,0 +1,427 @@
+{
+    "_meta": {
+        "entry_point": "start_general_guide",
+        "version": 1.0,
+        "description": "General guide to determine if user needs help selecting the appropriate deployment method, pipeline, protocol, and/or constructing the command to run GenPipes"
+    },
+    "nodes": [
+        {
+            "id": "start_general_guide",
+            "type": "confirm", 
+            "question": "Do you need help deploying GenPipes?",
+            "options": [
+                {
+                    "label": "Yes",
+                    "next": {
+                        "external": "deployment_guide.json",
+                        "entryPoint": "start_deployment_guide"
+                    }
+                },
+                {
+                    "label": "No",
+                    "next": "pipeline_help"
+                }
+            ]
+        },
+
+
+
+        {
+            "id": "pipeline_help",
+            "type": "confirm", 
+            "question": "Do you need help finding the pipeline that fits your dataset and your analysis goals?",
+            "options": [
+                {
+                    "label": "Yes",
+                    "next": {
+                        "external": "pipeline_guide.json",
+                        "entryPoint": "start_pipeline_guide"
+                    }
+                },
+                {
+                    "label": "No",
+                    "next": "pipeline_selection"
+                }
+            ] 
+        },
+        {
+            "id": "pipeline_selection",
+            "type": "selection",
+            "question": "Select the pipeline you are using:",
+            "choices": [
+              { "label": "Amplicon Sequencing Pipeline", "node": "ampliconseq_pipeline_selected" },
+              { "label": "ChIP Sequencing Pipeline", "node": "chipseq_pipeline_selected" },
+              { "label": "CoV Sequencing Pipeline", "node": "covseq_pipeline_selected" },
+              { "label": "DNA Sequencing Pipeline", "node": "dnaseq_pipeline_selected" },
+              { "label": "Long Read DNA Sequencing Pipeline", "node": "longread_dnaseq_pipeline_selected" },
+              { "label": "Methylation Sequencing Pipeline", "node": "methylseq_pipeline_selected" },
+              { "label": "Nanopore CoVSeQ Pipeline", "node": "nanopore_covseq_pipeline_selected" },
+              { "label": "RNA Sequencing Pipeline", "node": "rnaseq_pipeline_selected" },
+              { "label": "RNA Sequencing De-Novo Pipeline", "node": "rnaseq_denovo_assembly_pipeline_selected" },
+              { "label": "RNA Sequencing Light Pipeline", "node": "rnaseq_light_pipeline_selected" },
+              { "label": "Long Read Methylation Sequencing Pipeline", "node": "longread_methylseq_pipeline_selected"}
+            ]
+        },
+        {
+            "id": "ampliconseq_pipeline_selected",
+            "type": "set_variable",
+            "variable": "pipeline_name",
+            "value": "ampliconseq",
+            "next": "pipeline_choice_message_next_command"
+        },
+        {
+            "id": "chipseq_pipeline_selected",
+            "type": "set_variable",
+            "variable": "pipeline_name",
+            "value": "chipseq",
+            "next": "pipeline_choice_message_next_protocol"
+        },
+        {
+            "id": "covseq_pipeline_selected",
+            "type": "set_variable",
+            "variable": "pipeline_name",
+            "value": "covseq",
+            "next": "pipeline_choice_message_next_command"
+        },
+        {
+            "id": "dnaseq_pipeline_selected",
+            "type": "set_variable",
+            "variable": "pipeline_name",
+            "value": "dnaseq",
+            "next": "pipeline_choice_message_next_protocol"
+        },
+        {
+            "id": "longread_dnaseq_pipeline_selected",
+            "type": "set_variable",
+            "variable": "pipeline_name",
+            "value": "longread_dnaseq",
+            "next": "pipeline_choice_message_next_protocol" 
+        },
+        {
+            "id": "methylseq_pipeline_selected",
+            "type": "set_variable",
+            "variable": "pipeline_name",
+            "value": "methylseq",
+            "next": "pipeline_choice_message_next_protocol"
+        },
+        {
+            "id": "nanopore_covseq_pipeline_selected",
+            "type": "set_variable",
+            "variable": "pipeline_name",
+            "value": "nanopore_covseq",
+            "next": "pipeline_choice_message_next_protocol"
+        },
+        {
+            "id": "rnaseq_pipeline_selected",
+            "type": "set_variable",
+            "variable": "pipeline_name",
+            "value": "rnaseq",
+            "next": "pipeline_choice_message_next_protocol"
+        },
+        {
+            "id": "rnaseq_denovo_assembly_pipeline_selected",
+            "type": "set_variable",
+            "variable": "pipeline_name",
+            "value": "rnaseq_denovo_assembly",
+            "next": "pipeline_choice_message_next_protocol"
+        },
+        {
+            "id": "rnaseq_light_pipeline_selected",
+            "type": "set_variable",
+            "variable": "pipeline_name",
+            "value": "rnaseq_light",
+            "next": "pipeline_choice_message_next_command"
+        },
+        {
+            "id": "longread_methylseq_pipeline_selected",
+            "type": "set_variable",
+            "variable": "pipeline_name",
+            "value": "longread_methylseq",
+            "next": "pipeline_choice_message_next_command"
+        },
+        {
+            "id": "pipeline_choice_message_next_protocol",
+            "type": "message",
+            "message": "Your choice of pipeline to run GenPipes is: {{pipeline_name}}",
+            "next": "protocol_help"
+        },
+        {
+            "id": "pipeline_choice_message_next_command",
+            "type": "message",
+            "message": "You have selected to run the GenPipes pipeline: {{pipeline_name}}. Note: This pipeline only supports a single protocol.",
+            "next": "command_help"
+        },
+
+
+
+        {
+            "id": "protocol_help",
+            "type": "confirm",
+            "question": "Do you need help choosing the protocol for your pipeline?",
+            "options": [
+                {
+                    "label": "Yes",
+                    "next": {
+                        "external": "protocol_guide.json",
+                        "entryPoint": "start_protocol_guide"
+                    }
+                },
+                {
+                    "label": "No",
+                    "next": "protocol_selection"
+                }
+            ]
+        },
+        {
+            "id": "protocol_selection",
+            "type": "selection",
+            "question": "Select the protocol you are using:",
+            "choices_cases": [
+              {
+                "when": { "equals": { "pipeline_name": "chipseq" } },
+                "choices": [
+                  { "label": "ChipSeq (default)", "node": "chipseq_protocol_selected" },
+                  { "label": "ATACSeq", "node": "atacseq_protocol_selected" }
+                ]
+              },
+              {
+                "when": { "equals": { "pipeline_name": "dnaseq" } },
+                "choices": [
+                  { "label": "Germline SNV (default)", "node": "germline_snv_protocol_selected" },
+                  { "label": "Germline SV", "node": "germline_sv_protocol_selected" },
+                  { "label": "Germline High Coverage", "node": "germline_high_cov_protocol_selected" },
+                  { "label": "Somatic Tumor Only", "node": "somatic_tumor_only_protocol_selected" },
+                  { "label": "Somatic Fastpass", "node": "somatic_fastpass_protocol_selected" },
+                  { "label": "Somatic Ensemble", "node": "somatic_ensemble_protocol_selected" },
+                  { "label": "Somatic SV", "node": "somatic_sv_protocol_selected" }
+                ]
+              },
+              {
+                "when": { "equals": { "pipeline_name": "longread_dnaseq" } },
+                "choices": [
+                  { "label": "Nanopore (default)", "node": "nanopore_protocol_selected" },
+                  { "label": "Revio", "node": "revio_protocol_selected" }
+                ]
+              },
+              {
+                "when": { "equals": { "pipeline_name": "methylseq" } },
+                "choices": [
+                  { "label": "Bismark (default)", "node": "bismark_protocol_selected" },
+                  { "label": "GemBS", "node": "gembs_protocol_selected" },
+                  { "label": "Dragen", "node": "dragen_protocol_selected" },
+                  { "label": "Hybrid", "node": "hybrid_protocol_selected" }
+                ]
+              },
+              {
+                "when": { "equals": { "pipeline_name": "nanopore_covseq" } },
+                "choices": [
+                  { "label": "Default", "node": "default_protocol_selected" },
+                  { "label": "Basecalling", "node": "basecalling_protocol_selected" }
+                ]
+              },
+              {
+                "when": { "equals": { "pipeline_name": "rnaseq" } },
+                "choices": [
+                  { "label": "StringTie (default)", "node": "stringtie_protocol_selected" },
+                  { "label": "Variants", "node": "variants_protocol_selected" },
+                  { "label": "Cancer", "node": "cancer_protocol_selected" }
+                ]
+              },
+              {
+                "when": { "equals": { "pipeline_name": "rnaseq_denovo_assembly" } },
+                "choices": [
+                  { "label": "Trinity (default)", "node": "trinity_protocol_selected" },
+                  { "label": "Seq2Fun", "node": "seq2fun_protocol_selected" }
+                ]
+              }
+            ]
+        },          
+        {
+            "id": "chipseq_protocol_selected",
+            "type": "set_variable",
+            "variable": "protocol_name",
+            "value": "chipseq",
+            "next": "protocol_choice_message"
+        },
+        {
+            "id": "atacseq_protocol_selected",
+            "type": "set_variable",
+            "variable": "protocol_name",
+            "value": "atacseq",
+            "next": "protocol_choice_message"
+        },
+        {
+            "id": "germline_sv_protocol_selected",
+            "type": "set_variable",
+            "variable": "protocol_name",
+            "value": "germline_sv",
+            "next": "protocol_choice_message"
+        },
+        {
+            "id": "germline_snv_protocol_selected",
+            "type": "set_variable",
+            "variable": "protocol_name",
+            "value": "germline_snv",
+            "next": "protocol_choice_message"
+        },
+        {
+            "id": "germline_high_cov_protocol_selected",
+            "type": "set_variable",
+            "variable": "protocol_name",
+            "value": "germline_high_cov",
+            "next": "protocol_choice_message"
+        },
+        {
+            "id": "somatic_ensemble_protocol_selected",
+            "type": "set_variable",
+            "variable": "protocol_name",
+            "value": "somatic_ensemble",
+            "next": "protocol_choice_message"
+        },
+        {
+            "id": "somatic_tumor_only_protocol_selected",
+            "type": "set_variable",
+            "variable": "protocol_name",
+            "value": "somatic_tumor_only",
+            "next": "protocol_choice_message"
+        },
+        {
+            "id": "somatic_sv_protocol_selected",
+            "type": "set_variable",
+            "variable": "protocol_name",
+            "value": "somatic_sv",
+            "next": "protocol_choice_message"
+        },
+        {
+            "id": "somatic_fastpass_protocol_selected",
+            "type": "set_variable",
+            "variable": "protocol_name",
+            "value": "somatic_fastpass",
+            "next": "protocol_choice_message"
+        },
+        {
+            "id": "nanopore_protocol_selected",
+            "type": "set_variable",
+            "variable": "protocol_name",
+            "value": "nanopore",
+            "next": "protocol_choice_message"
+        },
+        {
+            "id": "revio_protocol_selected",
+            "type": "set_variable",
+            "variable": "protocol_name",
+            "value": "revio",
+            "next": "protocol_choice_message"
+        },
+        {
+            "id": "bismark_protocol_selected",
+            "type": "set_variable",
+            "variable": "protocol_name",
+            "value": "bismark",
+            "next": "protocol_choice_message"
+        },
+        {
+            "id": "gembs_protocol_selected",
+            "type": "set_variable",
+            "variable": "protocol_name",
+            "value": "gembs",
+            "next": "protocol_choice_message"
+        },
+        {
+            "id": "dragen_protocol_selected",
+            "type": "set_variable",
+            "variable": "protocol_name",
+            "value": "dragen",
+            "next": "protocol_choice_message"
+        },
+        {
+            "id": "hybrid_protocol_selected",
+            "type": "set_variable",
+            "variable": "protocol_name",
+            "value": "hybrid",
+            "next": "protocol_choice_message"
+        },
+        {
+            "id": "basecalling_protocol_selected",
+            "type": "set_variable",
+            "variable": "protocol_name",
+            "value": "basecalling",
+            "next": "protocol_choice_message"
+        },
+        {
+            "id": "default_protocol_selected",
+            "type": "set_variable",
+            "variable": "protocol_name",
+            "value": "default",
+            "next": "protocol_choice_message"
+        },
+        {
+            "id": "cancer_protocol_selected",
+            "type": "set_variable",
+            "variable": "protocol_name",
+            "value": "cancer",
+            "next": "protocol_choice_message"
+        },
+        {
+            "id": "variants_protocol_selected",
+            "type": "set_variable",
+            "variable": "protocol_name",
+            "value": "variants",
+            "next": "protocol_choice_message"
+        },
+        {
+            "id": "stringtie_protocol_selected",
+            "type": "set_variable",
+            "variable": "protocol_name",
+            "value": "stringtie",
+            "next": "protocol_choice_message"
+        },
+        {
+            "id": "seq2fun_protocol_selected",
+            "type": "set_variable",
+            "variable": "protocol_name",
+            "value": "seq2fun",
+            "next": "protocol_choice_message"
+        },
+        {
+            "id": "trinity_protocol_selected",
+            "type": "set_variable",
+            "variable": "protocol_name",
+            "value": "trinity",
+            "next": "protocol_choice_message"
+        },
+        {
+            "id": "protocol_choice_message",
+            "type": "message",
+            "message": "Your choice of protocol to run GenPipes is: {{protocol_name}}",
+            "next": "command_help"
+        },
+
+
+
+        {
+            "id": "command_help",
+            "type": "confirm", 
+            "question": "Do you need help writing the command to run your pipeline?",
+            "options": [
+                {
+                    "label": "Yes",
+                    "next": {
+                        "external": "command_guide.json",
+                        "entryPoint": "start_command_guide"
+                    }
+                },
+                {
+                    "label": "No",
+                    "next": "end"
+                }
+            ] 
+        },
+        {
+            "id": "end",
+            "type": "message",
+            "message": "Thank you for using the GenPipes Wizard. Best of luck with your analysis! \n\nFor additional support, run 'genpipes -h', 'genpipes --help' or consult the readthedocs: https://genpipes.readthedocs.io\n\n"
+          }
+          
+    ]
+}

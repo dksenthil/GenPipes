@@ -1,0 +1,316 @@
+{
+    "_meta": {
+        "entry_point": "start_protocol_guide",
+        "version": 1.0,
+        "description": "Guide to help the user select the appropriate protocol to analyze their dataset on GenPipes"
+    },
+
+    "nodes":[
+        {
+            "id": "start_protocol_guide",
+            "type": "switch",
+            "variable": "pipeline_name",
+            "cases": {
+                "chipseq": {"node": "chipseq_protocol_help"},
+                "dnaseq": {"node": "dnaseq_protocol_help"},
+                "longread_dnaseq": {"node": "longread_dnaseq_protocol_help"},
+                "methylseq": {"node": "methylseq_protocol_help"},
+                "nanopore_covseq": {"node": "nanopore_covseq_protocol_help"},
+                "rnaseq": {"node": "rnaseq_protocol_help"},
+                "rnaseq_denovo_assembly": {"node": "rnaseq_denovo_assembly_protocol_help"}
+            }
+        }, 
+        {
+            "id": "chipseq_protocol_help",
+            "type": "confirm",
+            "question": "Do you want to analyze DNA-protein interactions using ChIP-seq data?",
+            "options": [
+                {
+                    "label": "Yes",
+                    "next": {
+                        "external": "general_guide.json",
+                        "entryPoint": "chipseq_protocol_selected"
+                        
+                    }
+                },
+                {
+                    "label": "No",
+                    "next": {
+                        "external": "general_guide.json",
+                        "entryPoint": "atacseq_protocol_selected"
+                    }
+                }
+            ]
+        },
+        {
+            "id": "dnaseq_protocol_help",
+            "type": "confirm",
+            "question": "Will your analysis focus on detection of germline (inherited) DNA variants?",
+            "options": [
+                {
+                    "label": "Yes",
+                    "next": "germline_question"
+                },
+                {
+                    "label": "No",
+                    "next": "somatic_question"
+                }
+            ]
+        },
+        {
+            "id": "germline_question",
+            "type": "confirm",
+            "question": "Is your dataset a result of targeted sequencing, such as a panel of genes?",
+            "options": [
+                {
+                    "label": "Yes",
+                    "next": {
+                        "external": "general_guide.json",
+                        "entryPoint": "germline_high_cov_protocol_selected"
+                    }
+                },
+                {
+                    "label": "No",
+                    "next": "germline_sv_snv_question"
+                }
+            ]
+        },
+        {
+            "id": "germline_sv_snv_question",
+            "type": "selection",
+            "question": "Do you want to focus on structural variants (SV) or single nucleotide variants (SNV)?",
+            "choices": [
+                {   "label": "SV", 
+                    "node": {
+                        "external": "general_guide.json",
+                        "entryPoint": "germline_sv_protocol_selected"
+                    }
+                },
+                {
+                    "label": "SNV",
+                    "node": {
+                        "external": "general_guide.json",
+                        "entryPoint": "germline_snv_protocol_selected"
+                    }
+                }
+            ]
+        },
+        {
+            "id": "somatic_question",
+            "type": "selection",
+            "question": "Do you have a matched tumor and normal samples or do you only have a tumor sample?",
+            "choices": [
+                {
+                    "label": "Matched tumor and normal samples",
+                    "node": "somatic_sv_question"
+                },
+                {
+                    "label": "Only a tumor sample",
+                    "node": {
+                        "external": "general_guide.json",
+                        "entryPoint": "somatic_tumor_only_protocol_selected"
+                    }
+                }
+            ]
+        },
+        {
+            "id": "somatic_sv_question",
+            "type": "confirm",
+            "question": "Do you want to perform somatic structural variant (SV) detection?",
+            "options": [
+                {
+                    "label": "Yes",
+                    "next": {
+                        "external": "general_guide.json",
+                        "entryPoint": "somatic_sv_protocol_selected"
+                    }
+                },
+                {
+                    "label": "No",
+                    "next": "fastpass_ensemble_question"
+                }
+            ]
+        },
+        {
+            "id": "fastpass_ensemble_question",
+            "type": "selection",
+            "question": "Do you want to perform a quick assessment or use an ensemble approach to detect somatic mutations?",
+            "choices": [
+                {
+                    "label": "Quick assessment",
+                    "node": {
+                        "external": "general_guide.json",
+                        "entryPoint": "somatic_fastpass_protocol_selected"
+                    }
+                },
+                {
+                    "label": "Ensemble approach",
+                    "node": {
+                        "external": "general_guide.json",
+                        "entryPoint": "somatic_ensemble_protocol_selected"
+                    }
+                }
+            ]
+        },
+        {
+            "id": "longread_dnaseq_protocol_help",
+            "type": "confirm",
+            "question": "Is your data generated on a Nanopore instrument?",
+            "options": [
+                {
+                    "label": "Yes",
+                    "next": {
+                        "external": "general_guide.json",
+                        "entryPoint": "nanopore_protocol_selected"
+                        
+                    }
+                },
+                {
+                    "label": "No",
+                    "next": {
+                        "external": "general_guide.json",
+                        "entryPoint": "revio_protocol_selected"
+                    }
+                }
+            ]
+        },
+        {
+            "id": "methylseq_protocol_help",
+            "type": "confirm",
+            "question": "Do you have access to the Illumina Dragen Bio-IT platform?",
+            "options": [
+                {
+                    "label": "Yes",
+                    "next": "dragen_hybrid_protocol_help"
+                },
+                {
+                    "label": "No",
+                    "next": "bismark_gembs_protocol_help"
+                }
+            ]
+        },
+        {
+            "id": "dragen_hybrid_protocol_help",
+            "type": "selection",
+            "question": "Select between the Dragen and Hybrid protocol based on your preference:",
+            "choices": [
+              {
+                "label": "dragen",
+                "node": {
+                  "external": "general_guide.json",
+                  "entryPoint": "dragen_protocol_selected"
+                }
+              },
+              {
+                "label": "hybrid",
+                "node": {
+                  "external": "general_guide.json",
+                  "entryPoint": "hybrid_protocol_selected"
+                }
+              }
+            ]
+        },                 
+        {
+            "id": "bismark_gembs_protocol_help",
+            "type": "selection",
+            "question": "Select between the Bismark and GemBS protocol based on your preference:",
+            "choices": [
+              {
+                "label": "bismark",
+                "node": {
+                  "external": "general_guide.json",
+                  "entryPoint": "bismark_protocol_selected"
+                }
+              },
+              {
+                "label": "gembs",
+                "node": {
+                  "external": "general_guide.json",
+                  "entryPoint": "gembs_protocol_selected"
+                }
+              }
+            ]
+        },
+        {
+            "id": "nanopore_covseq_protocol_help",
+            "type": "confirm",
+            "question": "Do you want to do basecalling?",
+            "options": [
+                {
+                    "label": "Yes",
+                    "next": {
+                        "external": "general_guide.json",
+                        "entryPoint": "basecalling_protocol_selected"
+                    }
+                },
+                {
+                    "label": "No",
+                    "next": {
+                        "external": "general_guide.json",
+                        "entryPoint": "default_protocol_selected"
+                    }
+                }
+            ]
+        },
+        {
+            "id": "rnaseq_protocol_help",
+            "type": "confirm",
+            "question": "Is your dataset from cancer samples?",
+            "options": [
+                {
+                    "label": "Yes",
+                    "next": {
+                        "external": "general_guide.json",
+                        "entryPoint": "cancer_protocol_selected"
+                    }
+                },
+                {
+                    "label": "No",
+                    "next": "variant_question"
+                }
+            ]
+        },
+        {
+            "id": "variant_question",
+            "type": "confirm",
+            "question": "Do you want to perform variant detection?",
+            "options": [
+                {
+                    "label": "Yes",
+                    "next": {
+                        "external": "general_guide.json",
+                        "entryPoint": "variants_protocol_selected"
+                    }
+                },
+                {
+                    "label": "No",
+                    "next": {
+                        "external": "general_guide.json",
+                        "entryPoint": "stringtie_protocol_selected"
+                    }
+                }
+            ]
+        },
+        {
+            "id": "rnaseq_denovo_assembly_protocol_help",
+            "type": "confirm",
+            "question": "Did your RNA-seq datasets originate from an organism without any reference genome?",
+            "options": [
+                {
+                    "label": "Yes",
+                    "next": {
+                        "external": "general_guide.json",
+                        "entryPoint": "seq2fun_protocol_selected"
+                    }
+                },
+                {
+                    "label": "No",
+                    "next": {
+                        "external": "general_guide.json",
+                        "entryPoint": "trinity_protocol_selected"
+                    }
+                }
+            ]
+        }
+    ]
+}

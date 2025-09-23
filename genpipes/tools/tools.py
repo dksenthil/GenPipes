@@ -23,6 +23,8 @@ import sys
 
 from . import log_report
 from . import job2json_project_tracking
+from . import wizard 
+
 
 def add_subcommands(parser):
     """
@@ -83,6 +85,10 @@ def add_subcommands(parser):
     parser_validate_genpipes.add_argument('-d', '--design', help='Design file to validate')
     parser_validate_genpipes.add_argument('-p', '--pipeline', required=True, help='Pipeline name to validate against', choices=['ampliconseq', 'chipseq', 'covseq', 'dnaseq', 'methylseq', 'longread_dnaseq', 'nanopore_covseq', 'rnaseq', 'rnaseq_denovo_assembly', 'rnaseq_light'])
     parser_validate_genpipes.set_defaults(func=run_validate_genpipes)
+
+    # Create the parser for the "wizard" subcommand
+    parser_wizard = tools_subparsers.add_parser('wizard', help='Launch the GenPipes Wizard.')
+    parser_wizard.set_defaults(func=run_wizard)
 
 def run_chunk_genpipes(args):
     """
@@ -155,3 +161,10 @@ def run_validate_genpipes(args):
     if args.design:
         cmd += ['-d', args.design]
     subprocess.run(cmd, check=False)
+
+def run_wizard(args):
+    """
+    Run the wizard.py script.
+    """
+    wizard.main()
+
