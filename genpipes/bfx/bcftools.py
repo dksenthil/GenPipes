@@ -155,7 +155,7 @@ bcftools \\
         )
     )
 
-def view(input, output, filter_options=None):
+def view(input, output, filter_options=None, ini_section="bcftools_view"):
     """
     Generalized view 
     """
@@ -163,7 +163,7 @@ def view(input, output, filter_options=None):
         [input],
         [output],
         [
-            ['bcftools_view', 'module_bcftools']
+            [ini_section, 'module_bcftools']
         ],
         command="""\
 bcftools \\
