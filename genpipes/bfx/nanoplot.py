@@ -45,8 +45,12 @@ def qc(
         os.path.join(output_dir, output_prefix + "NanoStats.txt")
     ]
 
-    if is_directory:
-        input_fastq = f"{input_fastq}/*"
+    if is_directory and input_fastq:
+        fastq_input = f"{input_fastq}/*"
+    elif input_fastq:
+        fastq_input = input_fastq
+    else:
+        fastq_input = None
 
     bam_flag = "--ubam " if aligned==False else "--bam "
 
@@ -64,7 +68,7 @@ NanoPlot {other_options} \\
   --threads {threads}""".format(
             other_options=global_conf.global_get(ini_section, 'other_options', required=False),
             input_bam=bam_flag + input_bam if input_bam else "",
-            input_fastq="--fastq " + input_fastq if input_fastq else "",
+            input_fastq="--fastq " + fastq_input if input_fastq else "",
             input_summary="--summary " + input_summary if input_summary else "",
             threads=global_conf.global_get(ini_section, 'threads'),
             output_dir=output_dir,
