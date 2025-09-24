@@ -31,6 +31,7 @@ def qc(
     input_fastq=None,
     input_summary=None,
     aligned = False,
+    is_directory = False,
     ini_section='nanoplot'
     ):
     """
@@ -43,6 +44,9 @@ def qc(
         os.path.join(output_dir, output_prefix + "NanoPlot-report.html"),
         os.path.join(output_dir, output_prefix + "NanoStats.txt")
     ]
+
+    if is_directory:
+        input_fastq = f"{input_fastq}/*"
 
     bam_flag = "--ubam " if aligned==False else "--bam "
 

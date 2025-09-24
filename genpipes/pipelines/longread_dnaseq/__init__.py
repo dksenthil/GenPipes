@@ -230,6 +230,8 @@ For information on the structure and contents of the LongRead readset file, plea
             nanoplot_directory = os.path.join(metrics_directory, "nanoplot")
             nanoplot_prefix = f"{readset.name}."
 
+            is_directory = False
+
             if readset.summary_file:
                 input_summary = os.path.join(nanoplot_directory, os.path.basename(readset.summary_file))
                 link_job = bash.ln(
@@ -240,6 +242,8 @@ For information on the structure and contents of the LongRead readset file, plea
                 input_fastq = None
                 input_bam = None
             elif readset.fastq_files:
+                if os.path.isdir(readset.fastq_files):
+                    is_directory = True
                 input_fastq = os.path.join(nanoplot_directory, os.path.basename(readset.fastq_files))
                 link_job = bash.ln(
                     os.path.abspath(readset.fastq_files),
@@ -270,7 +274,8 @@ For information on the structure and contents of the LongRead readset file, plea
                             nanoplot_prefix,
                             input_bam,
                             input_fastq,
-                            input_summary
+                            input_summary,
+                            is_directory=is_directory
                         )
                     ],
                     name=f"nanoplot.{readset.name}",
@@ -1129,12 +1134,14 @@ For information on the structure and contents of the LongRead readset file, plea
                                     bcftools.reheader(
                                         clairS_germline_vcf,
                                         None,
-                                        f"-n {tumor_pair.normal.name}"
+                                        f"-n {tumor_pair.normal.name}",
+                                        ini_section="merge_filter_clairS"
                                     ),
                                     bcftools.view(
                                         None,
                                         clairS_germline_filtered,
-                                        "-f PASS -Oz"
+                                        "-f PASS -Oz",
+                                        ini_section="merge_filter_clairS"
                                     )
                                 ]
                             ),
