@@ -245,11 +245,16 @@ For information on the structure and contents of the LongRead readset file, plea
                 if os.path.isdir(readset.fastq_files):
                     is_directory = True
                 input_fastq = os.path.join(nanoplot_directory, os.path.basename(readset.fastq_files))
-                link_job = bash.ln(
-                    os.path.abspath(readset.fastq_files),
-                    input_fastq,
-                    readset.fastq_files
-                    )
+                link_job = concat_jobs(
+                    [
+                        bash.rm(input_fastq),
+                        bash.ln(
+                            os.path.abspath(readset.fastq_files),
+                            input_fastq,
+                            readset.fastq_files
+                        )
+                    ]
+                )
                 input_bam = None
                 input_summary = None
             elif readset.bam:
@@ -280,7 +285,8 @@ For information on the structure and contents of the LongRead readset file, plea
                     ],
                     name=f"nanoplot.{readset.name}",
                     samples=[readset.sample],
-                    readsets=[readset]
+                    readsets=[readset],
+                    input_dependency=[readset.bam, readset.fastq_files, readset.summary_file]
                 )
             )
 
@@ -1164,7 +1170,8 @@ For information on the structure and contents of the LongRead readset file, plea
                                 clairS_somatic_vcf
                             ),
                             htslib.tabix(
-                                clairS_somatic_vcf
+                                clairS_somatic_vcf,
+                                "-f -pvcf"
                             ),
                             bcftools.view(
                                 clairS_somatic_vcf,
