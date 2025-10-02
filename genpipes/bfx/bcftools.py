@@ -155,7 +155,7 @@ bcftools \\
         )
     )
 
-def view(input, output, filter_options=None):
+def view(input, output, filter_options=None, ini_section="bcftools_view"):
     """
     Generalized view 
     """
@@ -163,7 +163,7 @@ def view(input, output, filter_options=None):
         [input],
         [output],
         [
-            ['bcftools_view', 'module_bcftools']
+            [ini_section, 'module_bcftools']
         ],
         command="""\
 bcftools \\
@@ -317,4 +317,25 @@ bcftools \\
         input=input,
         output=output
         )
+    )
+
+def reheader(input, output, options, ini_section='bcftools_reheader'):
+    """
+    modify header of vcf or change sample names
+    """
+
+    return Job(
+        [input],
+        [output],
+        [
+            [ini_section, 'module_bcftools']
+        ],
+        command="""\
+bcftools \\
+    reheader {options} \\
+    {output} {input}""".format(
+        options=options,
+        input=input if input else "",
+        output="-o " + output if output else ""
+    )
     )

@@ -86,13 +86,14 @@ def parse_slurm_job_info(job_info, job_id):
             job_details['Timelimit'] = row['Timelimit']
             job_details['ReqCPUS'] = row['ReqCPUS']
             job_details['ReqMem'] = row['ReqMem']
+            job_details['State'] = row['State']
 
         # Extracting from the third line (line starting with ${JobID}.0)
         elif row['JobID'] == f"{job_id}.0":
+            if job_details['State'] == 'RUNNING':
+                job_details['State'] = row['State']
             if 'CANCELLED by ' in row['State']:
                 job_details['State'] = 'OUT_OF_MEMORY'
-            else:
-                job_details['State'] = row['State']
             job_details['Start'] = row['Start']
             job_details['End'] = row['End']
             job_details['Elapsed'] = row['Elapsed']
@@ -230,6 +231,9 @@ def time_str_to_seconds(time_str):
     parts = time_str.split(':')
     if len(parts) == 3:
         h, m, s = parts
+        if '-' in h:
+            d, h = h.split('-')
+            h = (int(d) * 24) + int(h)
     elif len(parts) == 2:
         h = '0'
         m, s = parts

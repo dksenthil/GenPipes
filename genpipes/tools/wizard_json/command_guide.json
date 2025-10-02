@@ -1,0 +1,502 @@
+{
+    "_meta": {
+        "entry_point": "start_command_guide",
+        "version": 1.0,
+        "description": "Guide to help construct the command to run GenPipes"
+    },
+    "nodes":[
+        {
+            "id": "start_command_guide",
+            "type": "set_variable",
+            "variable": "t_command",
+            "value": "-t {{protocol_name}}",
+            "next": "readset_file_question"
+        },
+        {
+            "id": "readset_file_question",
+            "type": "input",
+            "variable": "raw_readset_filename",
+            "prompt": "Enter the name of the readset file", 
+            "next": "store_readset_filename"
+        },
+        {
+            "id": "store_readset_filename", 
+            "type": "set_variable",
+            "variable": "r_command",
+            "value": "-r {{raw_readset_filename}}",
+            "next": "slurm_job_scheduler_question"
+        },
+        {
+            "id": "slurm_job_scheduler_question", 
+            "type": "confirm",
+            "question": "Do you want to use the SLURM job scheduler?",
+            "options": [
+                {
+                    "label": "Yes",
+                    "next": "slurm_j_command"
+                },
+                {
+                    "label": "No",
+                    "next": "general_job_scheduler_question"
+                }
+            ]
+        },
+        {
+            "id": "slurm_j_command", 
+            "type": "set_variable",
+            "variable": "j_command",
+            "value": "-j slurm",
+            "next": "slurm_server_question"
+        },
+        {
+            "id": "slurm_server_question",
+            "type": "selection",
+            "question": "Select the SLURM server you want to use:",
+            "choices": [
+                {"label": "Rorqual", "node": "rorqual_server_ini"},
+                {"label": "Fir", "node": "fir_server_ini"},
+                {"label": "Narval", "node": "narval_server_ini"}
+            ]
+        },
+        {
+            "id": "rorqual_server_ini", 
+            "type": "set_variable",
+            "variable": "scheduler_server_name",
+            "value": "rorqual",
+            "next": "store_name_for_server_ini"
+        },
+        {
+            "id": "fir_server_ini", 
+            "type": "set_variable",
+            "variable": "scheduler_server_name",
+            "value": "fir",
+            "next": "store_name_for_server_ini"
+        },
+        {
+            "id": "narval_server_ini", 
+            "type": "set_variable",
+            "variable": "scheduler_server_name",
+            "value": "narval",
+            "next": "store_name_for_server_ini"
+        },
+        {
+            "id": "general_job_scheduler_question",
+            "type": "selection",
+            "question": "Which job scheduler do you want to use?",
+            "choices": [
+                {"label": "Abacus", "node": "abacus_j_command"},
+                {"label": "Batch", "node": "batch_j_command"}
+            ]
+        },
+        {
+            "id": "abacus_j_command",
+            "type": "set_variable",
+            "variable": "j_command",
+            "value": "-j pbs",
+            "next": "abacus_server"
+        },
+        {
+            "id": "abacus_server",
+            "type": "set_variable",
+            "variable": "scheduler_server_name",
+            "value": "abacus",
+            "next": "custom_ini_question"
+        },
+        {
+            "id": "batch_j_command",
+            "type": "set_variable",
+            "variable": "j_command",
+            "value": "-j batch",
+            "next": "batch_server_ini"
+        },
+        {
+            "id": "batch_server_ini",
+            "type": "set_variable",
+            "variable": "scheduler_server_name",
+            "value": "batch",
+            "next": "store_name_for_server_ini"
+        },
+        {
+            "id": "store_name_for_server_ini",
+            "type": "set_variable",
+            "variable": "server_ini",
+            "value": "GENPIPES_INIS/common_ini/{{scheduler_server_name}}.ini",
+            "next": "custom_ini_question"
+        },
+        {
+            "id": "custom_ini_question",
+            "type": "switch",
+            "variable": "pipeline_name",
+            "cases": {
+                "ampliconseq": {"node": "c_command_construction_no_custom_choice"},
+                "chipseq": {"node": "c_command_construction_no_custom_choice"},
+                "covseq": {"node": "path_custom_ini_question" },
+                "dnaseq": {"node": "custom_ini_check_protocol"},
+                "longread_dnaseq": {"node": "c_command_construction_no_custom_choice"},
+                "methylseq": {"node": "c_command_construction_no_custom_choice"},
+                "nanopore_covseq": {"node": "path_custom_ini_question"},
+                "rnaseq": {"node": "c_command_construction_no_custom_choice"},
+                "rnaseq_denovo_assembly": {"node": "c_command_construction_no_custom_choice"},
+                "rnaseq_light": {"node": "c_command_construction_no_custom_choice"},
+                "longread_methylseq": {"node": "c_command_construction_no_custom_choice" }
+            }
+        },
+        {
+            "id": "custom_ini_check_protocol",
+            "type": "switch",
+            "variable": "protocol_name",
+            "cases": {
+                "germline_snv": {"node": "c_command_construction_no_custom_choice"},
+                "germline_sv": {"node": "path_custom_ini_question"},
+                "germline_high_cov": {"node": "c_command_construction_no_custom_choice"},
+                "somatic_tumor_only": {"node": "c_command_construction_no_custom_choice"},
+                "somatic_fastpass": {"node": "path_custom_ini_question"},
+                "somatic_ensemble": {"node": "path_custom_ini_question"},
+                "somatic_sv": {"node": "path_custom_ini_question"}
+            }
+        },
+        {
+            "id": "path_custom_ini_question",
+            "type": "input",
+            "variable": "raw_path_custom_ini",
+            "prompt": "Enter the name of the custom ini",
+            "next": "store_path_custom_ini"
+        },
+        {
+            "id": "store_path_custom_ini",
+            "type": "set_variable",
+            "variable": "path_custom_ini",
+            "value": "{{raw_path_custom_ini}}",
+            "next": "c_command_construction_with_custom_choice"
+        },
+        {
+            "id": "c_command_construction_no_custom_choice",
+            "type": "switch",
+            "variable": "scheduler_server_name",
+            "cases": {
+                "abacus": {"node": "c_command_construction_abacus_no_custom"},
+                "batch": {"node": "c_command_construction_no_custom"},
+                "rorqual": {"node": "c_command_construction_no_custom" },
+                "fir": {"node": "c_command_construction_no_custom"},
+                "narval": {"node": "c_command_construction_no_custom"}
+            }
+        },
+        {
+            "id": "c_command_construction_with_custom_choice",
+            "type": "switch",
+            "variable": "scheduler_server_name",
+            "cases": {
+                "abacus": {"node": "c_command_construction_abacus_with_custom"},
+                "batch": {"node": "c_command_construction_with_custom"},
+                "rorqual": {"node": "c_command_construction_with_custom" },
+                "fir": {"node": "c_command_construction_with_custom"},
+                "narval": {"node": "c_command_construction_with_custom"}
+            }
+        },
+        {
+            "id": "c_command_construction_abacus_no_custom",
+            "type": "set_variable",
+            "variable": "c_command",
+            "value": "-c $GENPIPES_INIS/{{pipeline_name}}/{{pipeline_name}}.base.ini",
+            "next": "c_command_genome_question"
+        },
+        {
+            "id": "c_command_construction_no_custom",
+            "type": "set_variable",
+            "variable": "c_command",
+            "value": "-c $GENPIPES_INIS/{{pipeline_name}}/{{pipeline_name}}.base.ini $GENPIPES_INIS/common_ini/{{scheduler_server_name}}.ini",
+            "next": "c_command_genome_question"
+        },
+        {
+            "id": "c_command_construction_abacus_with_custom",
+            "type": "set_variable",
+            "variable": "c_command",
+            "value": "-c $GENPIPES_INIS/{{pipeline_name}}/{{pipeline_name}}.base.ini $GENPIPES_INIS/{{pipeline_name}}/{{path_custom_ini}}",
+            "next": "c_command_genome_question"
+        },
+        {
+            "id": "c_command_construction_with_custom",
+            "type": "set_variable",
+            "variable": "c_command",
+            "value": "-c $GENPIPES_INIS/{{pipeline_name}}/{{pipeline_name}}.base.ini $GENPIPES_INIS/common_ini/{{scheduler_server_name}}.ini $GENPIPES_INIS/{{pipeline_name}}/{{path_custom_ini}}",
+            "next": "c_command_genome_question"
+        },
+        {
+            "id": "c_command_genome_question",
+            "type": "selection",
+            "question": "Select the reference genome to use when running the pipeline:",
+            "choices": [
+                {
+                    "label": "Human GRCh38 (default)",
+                    "node": "initialize_o_command"
+                },
+                {
+                    "label": "Mouse",
+                    "node": "mouse_ref_genome"
+                },
+                {
+                    "label": "Rat",
+                    "node": "rat_ref_genome"
+                },
+                {
+                    "label": "Other",
+                    "node": "other_ref_genome_input_name"
+                }
+            ]
+        },
+        {
+            "id": "mouse_ref_genome",
+            "type": "set_variable",
+            "variable": "genome_config_ini",
+            "value": "$MUGQIC_INSTALL_HOME/genomes/species/Mus_musculus.mm10/Mus_musculus.mm10.ini",
+            "next": "initialize_o_command"
+        },
+        {
+            "id": "rat_ref_genome",
+            "type": "set_variable",
+            "variable": "genome_config_ini",
+            "value": "$MUGQIC_INSTALL_HOME/genomes/species/Rattus_norvegicus.Rnor_6.0/Rattus_norvegicus.Rnor_6.0.ini",
+            "next": "initialize_o_command"
+        },
+        {
+            "id": "other_ref_genome_input_name",
+            "type": "input",
+            "variable": "reference_genome_name",
+            "prompt": "Enter the name of the reference genome. The various genome settings are available in $MUGQIC_INSTALL_HOME/genomes/species/", 
+            "next": "other_ref_genome_input_ini"
+        },
+        {
+            "id": "other_ref_genome_input_ini",
+            "type": "input",
+            "variable": "reference_genome_ini_filename",
+            "prompt": "Enter the reference genome ini filename:", 
+            "next": "other_ref_genome"
+        },
+        {
+            "id": "other_ref_genome",
+            "type": "set_variable",
+            "variable": "genome_config_ini",
+            "value": "$MUGQIC_INSTALL_HOME/genomes/species/{{reference_genome_name}}/{{reference_genome_ini_filename}}", 
+            "next": "initialize_o_command"
+        },
+        {
+            "id": "initialize_o_command",
+            "type": "set_variable",
+            "variable": "o_command",
+            "value": "",
+            "next": "o_command_question"
+        },          
+        {
+            "id": "o_command_question",
+            "type": "confirm",
+            "question":"Do you want to run the pipeline in your current directory?",
+            "options": [
+                {
+                    "label": "Yes",
+                    "next": "pipeline_check_for_file_question"
+                },
+                {
+                    "label": "No",
+                    "next": "input_directory_path"
+                }
+            ]
+        },
+        {
+            "id": "input_directory_path",
+            "type": "input",
+            "variable": "directory_path",
+            "prompt": "Enter the path to the directory you want to run the pipeline in", 
+            "next": "store_directory_path"
+        },
+        {
+            "id": "store_directory_path",
+            "type": "set_variable",
+            "variable": "o_command",
+            "value": "-o {{directory_path}}",
+            "next": "initialize_d_command"
+        },
+        {
+            "id": "initialize_d_command",
+            "type": "set_variable",
+            "variable": "d_command",
+            "value": "",
+            "next": "initialize_p_command"
+        },
+        {
+            "id": "initialize_p_command",
+            "type": "set_variable",
+            "variable": "p_command",
+            "value": "",
+            "next": "pipeline_check_for_file_question"
+        },          
+        {
+            "id": "pipeline_check_for_file_question",
+            "type": "switch",
+            "variable": "pipeline_name",
+            "cases": {
+                "ampliconseq": {"node": "design_file_question"},
+                "chipseq": {"node": "design_file_question"},
+                "covseq": {"node": "step_question" },
+                "dnaseq": {"node": "check_protocol_pair_file"},
+                "longread_dnaseq": {"node": "step_question"},
+                "methylseq": {"node": "design_file_question"},
+                "nanopore_covseq": {"node": "step_question"},
+                "rnaseq": {"node": "check_protocol_design_file"},
+                "rnaseq_denovo_assembly": {"node": "design_file_question"},
+                "rnaseq_light": {"node": "design_file_question"},
+                "longread_methylseq": {"node": "step_question"}
+            }
+        },
+        {
+            "id": "check_protocol_design_file",
+            "type": "switch",
+            "variable": "protocol_name",
+            "cases": {
+                "stringtie": {"node": "design_file_question"},
+                "variants": {"node": "step_question"},
+                "cancer": {"node": "step_question"}
+            }
+        },
+        {
+            "id": "design_file_question",
+            "type": "confirm",
+            "question": "Do you have a design file?",
+            "options": [
+                {
+                    "label": "Yes",
+                    "next": "input_design_file_name"
+                },
+                {
+                    "label": "No",
+                    "next": {
+                        "external": "step_guide.json",
+                        "entryPoint": "start_step_guide"
+                    }
+                }
+            ]
+        },
+        {
+            "id": "input_design_file_name",
+            "type": "input",
+            "variable": "design_file_name",
+            "prompt": "Enter the name of the design file",
+            "next": "store_design_file_name"
+        },
+        {
+            "id": "store_design_file_name",
+            "type": "set_variable",
+            "variable": "d_command",
+            "value": "-d {{design_file_name}}",
+            "next": "step_question"
+        },
+        {
+            "id": "check_protocol_pair_file",
+            "type": "switch",
+            "variable": "protocol_name",
+            "cases": {
+                "germline_snv": {"node": "step_question"},
+                "germline_sv": {"node": "step_question"},
+                "germline_high_cov": {"node": "step_question"},
+                "somatic_tumor_only": {"node": "pair_file_question"},
+                "somatic_fastpass": {"node": "input_pair_file_name"},
+                "somatic_ensemble": {"node": "input_pair_file_name"},
+                "somatic_sv": {"node": "input_pair_file_name"}
+            }
+        },
+        {
+            "id": "pair_file_question",
+            "type": "confirm",
+            "question": "Do you have a pair file?",
+            "options": [
+                {
+                    "label": "Yes",
+                    "next": "input_pair_file_name"
+                },
+                {
+                    "label": "No",
+                    "next": "step_question"
+                }
+            ]
+        },
+        {
+            "id": "input_pair_file_name",
+            "type": "input",
+            "variable": "pair_file_name",
+            "prompt": "Enter the name of the pair file",
+            "next": "store_pair_file_name"
+        },
+        {
+            "id": "store_pair_file_name",
+            "type": "set_variable",
+            "variable": "p_command",
+            "value": "-p {{pair_file_name}}",
+            "next": "initialize_s_command"
+        },
+        {
+            "id": "initialize_s_command",
+            "type": "set_variable",
+            "variable": "s_command",
+            "value": "",
+            "next": "step_question"
+        },  
+        {
+            "id": "step_question",
+            "type": "confirm",
+            "question": "Do you want to run all the steps of the pipeline?",
+            "options": [
+                {
+                    "label": "Yes",
+                    "next": "g_command_question"
+                },
+                {
+                    "label": "No",
+                    "next": "input_step_range"
+                }
+            ]
+        },
+        {
+            "id": "input_step_range",
+            "type": "input",
+            "variable": "step_range",
+            "prompt": "Enter the step range (e.g '1-5', '3,6,7', '2,4-8')",
+            "next": "store_step_range"
+        },
+        {
+            "id": "store_step_range",
+            "type": "set_variable",
+            "variable": "s_command",
+            "value": "-s {{step_range}}",
+            "next": "g_command_question"
+        },
+        {
+            "id": "g_command_question",
+            "type": "input",
+            "variable": "g_filename",
+            "prompt": "Enter a file name to save the GenPipes run commands",
+            "next": "store_g_file_name"
+        },
+        {
+            "id": "store_g_file_name",
+            "type": "set_variable",
+            "variable": "g_command",
+            "value": "-g {{g_filename}}",
+            "next": "command_construction"
+        },
+        {
+            "id": "command_construction",
+            "type": "set_variable",
+            "variable": "final_command",
+            "value": "genpipes {{pipeline_name}} {{t_command}} {{c_command}} {{genome_config_ini}} {{r_command}} {{d_command}} {{p_command}} {{j_command}} {{s_command}} {{o_command}} {{g_command}}",
+            "next": "end"
+        },
+        {
+            "id": "end",
+            "type": "message",
+            "message": "Follow these steps to run GenPipes: \n\nStep 1 - Run the full GenPipes command:\n{{final_command}} \n\nStep 2 - Run the following command to submit the jobs: bash {{g_filename}}",
+            "next":{
+                "external": "general_guide.json",
+                "entryPoint": "end"
+            }
+        }
+    ]
+}

@@ -1265,7 +1265,8 @@ END
                 output = os.path.join(report_directory, f"{tumor_pair.name}.{self.protocol}.multiqc")
                 job = multiqc.run(
                     patient_folders,
-                    output
+                    output,
+                    tumor_pair.name
                 )
 
                 job.name = f"multiqc.{tumor_pair.name}"
@@ -3012,7 +3013,6 @@ END
                 input_maf = os.path.join(pcgr_directory, tumor_pair.name + ".pcgr_acmg." + assembly + ".maf")
                 clean_maf =  os.path.join(pcgr_directory, tumor_pair.name + ".pcgr_acmg." + assembly + ".clean.maf") # MAF from pcgr version 1.4.1 required, remove any empty t_depth lines, needs to be gzipped
             
-                provenance_decoy = os.path.join(djerba_dir, "provenance_subset.tsv.gz")
                 config_file = os.path.join(djerba_dir, tumor_pair.name + ".djerba.ini")
                 djerba_script = os.path.join(djerba_dir, "djerba_report." + tumor_pair.name + ".sh")
 
@@ -3037,7 +3037,6 @@ END
                                 purple_zip,
                                 recursive=True
                                 ),
-                            bash.touch(provenance_decoy),
                             djerba.make_config(
                                 config_file,
                                 tumor_pair.name,
@@ -6292,10 +6291,6 @@ sed -i s/"isEmail = isLocalSmtp()"/"isEmail = False"/g {os.path.join(germline_di
                     for sequence in self.sequence_dictionary_variant() if sequence['type'] == 'primary'
                 ]
 
-            for input_vcf in all_inputs:
-                if not self.is_gz_file(os.path.join(self.output_dir, input_vcf)):
-                    log.error(f"Incomplete varscan2 vcf: {input_vcf}\n")
-
             all_output = os.path.join(pair_directory, f"{tumor_pair.name}.varscan2.vcf.gz")
             all_output_vt = os.path.join(pair_directory, f"{tumor_pair.name}.varscan2.vt.vcf.gz")
 
@@ -6723,10 +6718,6 @@ sed -i s/"isEmail = isLocalSmtp()"/"isEmail = False"/g {os.path.join(germline_di
 
             elif scatter_jobs > 1:
                 merge_list = [f"{output_prefix}.{idx}.mutect2.vcf.gz" for idx in range(scatter_jobs)]
-
-                for input_vcf in merge_list:
-                    if not self.is_gz_file(os.path.join(self.output_dir, input_vcf)):
-                        log.error(f"Incomplete mutect2 vcf: {input_vcf}\n")
 
                 if global_conf.global_get('gatk_mutect2', 'module_gatk').split("/")[2] > "4":
                     output_stats = os.path.join(pair_directory, f"{tumor_pair.name}.mutect2.vcf.gz.stats")
@@ -7200,10 +7191,6 @@ sed -i s/"isEmail = isLocalSmtp()"/"isEmail = False"/g {os.path.join(germline_di
             else:
                 merge_list = [f"{output_prefix}.{idx}.vardict.vcf.gz" for idx in range(1, scatter_jobs + 1)]
 
-                for input_vcf in merge_list:
-                    if not self.is_gz_file(os.path.join(self.output_dir, input_vcf)):
-                        log.error(f"Incomplete vardict vcf: {input_vcf}\n")
-
                 jobs.append(
                     concat_jobs(
                         [
@@ -7308,10 +7295,6 @@ sed -i s/"isEmail = isLocalSmtp()"/"isEmail = False"/g {os.path.join(germline_di
             input_varscan2 = os.path.join(input_directory, f"{tumor_pair.name}.varscan2.somatic.vt.vcf.gz")
             inputs_somatic = [input_mutect2, input_strelka2, input_vardict, input_varscan2]
 
-            for input_vcf in inputs_somatic:
-                if not self.is_gz_file(os.path.join(self.output_dir, input_vcf)):
-                    log.error(f"Incomplete ensemble vcf: {input_vcf}\n")
-
             output_ensemble = os.path.join(paired_ensemble_directory, f"{tumor_pair.name}.ensemble.somatic.vt.vcf.gz")
 
             jobs.append(
@@ -7367,10 +7350,6 @@ sed -i s/"isEmail = isLocalSmtp()"/"isEmail = False"/g {os.path.join(germline_di
             input_varscan2 = os.path.join(input_directory, f"{tumor_pair.name}.varscan2.germline.vt.vcf.gz")
 
             inputs_germline = [input_strelka2, input_vardict, input_varscan2]
-
-            for input_vcf in inputs_germline:
-                if not self.is_gz_file(os.path.join(self.output_dir, input_vcf)):
-                    log.error(f"Incomplete ensemble vcf: {input_vcf}\n")
 
             output_ensemble = os.path.join(paired_ensemble_directory, f"{tumor_pair.name}.ensemble.germline.vt.vcf.gz")
 
@@ -8164,6 +8143,9 @@ sed -i s/"isEmail = isLocalSmtp()"/"isEmail = False"/g {os.path.join(germline_di
         for tumor_pair in self.tumor_pairs.values():
             pair_dir = os.path.join(self.output_dirs['sv_variants_directory'], tumor_pair.name)
             linx_output_dir = os.path.join(pair_dir, "linx")
+            linx_plot_dir = os.path.join(linx_output_dir, "plot")
+            linx_zip = os.path.join(linx_output_dir, f"{tumor_pair.name}.linx_plot.zip")
+
             jobs.append(
                 concat_jobs(
                     [
@@ -8173,12 +8155,20 @@ sed -i s/"isEmail = isLocalSmtp()"/"isEmail = False"/g {os.path.join(germline_di
                             linx_output_dir,
                             ini_section="linx_plot"
                         ),
-                        bash.touch(os.path.join(linx_output_dir, f"linx_plot.{tumor_pair.name}.Done"))
+                        bash.touch(os.path.join(linx_plot_dir, f"linx_plot.{tumor_pair.name}.Done")),
+                        bash.zip(
+                            linx_plot_dir,
+                            linx_zip,
+                            recursive=True
+                        )
                     ],
                     name="linx_plot." + tumor_pair.name,
                     samples=[tumor_pair.tumor],
                     readsets=list(tumor_pair.tumor.readsets),
-                    output_dependency=[os.path.join(linx_output_dir, f"linx_plot.{tumor_pair.name}.Done")]
+                    output_dependency=[
+                        os.path.join(linx_plot_dir, f"linx_plot.{tumor_pair.name}.Done"),
+                        linx_zip
+                        ]
                 )
             )
         return jobs

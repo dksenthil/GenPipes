@@ -36,8 +36,6 @@ def make_config(
 
     config_content = f"""\
 [core]
-archive_name = djerba
-archive_url = http://$username:$password@$address:$port
 attributes = research 
 author = C3G Author
 configure_priority = 100
@@ -49,24 +47,12 @@ render_priority = 100
 report_id = {tumor_pair_name}
 report_version = 1
 
-[provenance_helper]
-attributes = research
-assay = {assay}
-tumour_id = {tumor_id}
-normal_id = {normal_id}
-sample_name_tumour = None
-sample_name_normal = None
-sample_name_aux = None
-project = {global_conf.global_get(ini_section, 'project_name', required = False)}
-donor = {tumor_pair_name}
-provenance_input_path = provenance_input.tsv.gz
-
 [case_overview]
 assay = {assay}
 attributes = research
-assay_description = WGS - DnaSeq Pipeline - Somatic Ensemble Protocol
+assay_description = {global_conf.global_get(ini_section, 'assay_description')}
 primary_cancer = {global_conf.global_get(ini_section, 'cancer_type', required = False) if global_conf.global_get(ini_section, 'cancer_type', required = False) else "Unknown"}
-site_of_biopsy = Unknown
+site_of_biopsy = {global_conf.global_get(ini_section, 'biopsy_site', required = False) if global_conf.global_get(ini_section, 'biopsy_site', required = False) else "Unknown"}
 study = {global_conf.global_get(ini_section, 'project_name', required = False) if global_conf.global_get(ini_section, 'project_name', required = False) else "Unknown"}
 patient_study_id = {tumor_pair_name}
 donor = {tumor_pair_name}
@@ -96,17 +82,17 @@ tumour_id = {tumor_id}
 normal_id = {normal_id}
 whizbam_project = COL
 
-[wgts.cnv_purple]
-apply cache = {global_conf.global_get(ini_section, 'apply_cache', required = False) if global_conf.global_get(ini_section, 'apply_cache', required = False) else "False"}
-update cache = {global_conf.global_get(ini_section, 'update_cache', required = False) if global_conf.global_get(ini_section, 'update_cache', required = False) else "False"}
-oncokb cache = {global_conf.global_get(ini_section, 'oncokb_cache', required = False) if global_conf.global_get(ini_section, 'oncokb_cache', required = False) else ""}
-attributes = research
-configure_priority = 900
-tumour_id = {tumor_id}
-oncotree_code = {global_conf.global_get(ini_section, 'cancer_type', required = False) if global_conf.global_get(ini_section, 'cancer_type', required = False) else ""}
-purple_zip = {purple_input}
-whizbam_project=OCTCAP
-assay = {assay}
+{"[wgts.cnv_purple]" if purple_input else ""}
+{"apply cache = " + global_conf.global_get(ini_section, 'apply_cache', required = False) if global_conf.global_get(ini_section, 'apply_cache', required = False) and purple_input else ""}
+{"update cache = " + global_conf.global_get(ini_section, 'update_cache', required = False) if global_conf.global_get(ini_section, 'update_cache', required = False) and purple_input else ""}
+{"oncokb cache = " + global_conf.global_get(ini_section, 'oncokb_cache', required = False) if global_conf.global_get(ini_section, 'oncokb_cache', required = False) and purple_input else ""}
+{"attributes = research" if purple_input else ""}
+{"configure_priority = 900" if purple_input else ""}
+{"tumour_id = " + tumor_id if purple_input else ""}
+{"oncotree_code = " + global_conf.global_get(ini_section, 'cancer_type') if purple_input else ""}
+{"purple_zip = " + purple_input if purple_input else ""}
+{"whizbam_project=OCTCAP" if purple_input else ""}
+{"assay = " + assay if purple_input else ""} 
 
 [gene_information_merger]
 attributes = research,supplementary
@@ -146,7 +132,7 @@ def clean_maf(
         command="""\
 col=$( awk -v RS='\\t' '/t_depth/{{print NR; exit}}' {input_maf} ) && \\
 awk -F'\\t' -v col=$col '! ( $col=="" )' {input_maf} > {output_maf} && \\
-gzip {output_maf}""".format(
+gzip -f {output_maf}""".format(
         input_maf=input_maf,
         output_maf=output_maf
         )
@@ -168,6 +154,7 @@ echo "module purge && \\
 module load {module_djerba} {module_wkhtmltopdf} && \\
 export ONCOKB_TOKEN={oncokb_token} && \\
 export DJERBA_CORE_HTML_DIR={html_directory} && \\
+export DJERBA_TRACKING_DIR={output_dir} && \\
 
 djerba.py {djerba_options} report \\
     -i {config_file} \\

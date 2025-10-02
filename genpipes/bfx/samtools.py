@@ -141,11 +141,12 @@ def merge(
             [ini_section, 'module_samtools']
         ],
         command="""\
-samtools merge -f --write-index \\
+samtools merge -f {other_options} \\
   --output-fmt {output_format} \\
   {threads} \\
   -o {sample_output} \\
   {input_bams}""".format(
+            other_options=global_conf.global_get(ini_section, 'other_options'),
             output_format=postfix,
             threads="--threads " + global_conf.global_get(ini_section, 'threads'),
             sample_output=sample_output,
@@ -471,6 +472,28 @@ samtools bam2fq {other_options} \\
           input_bam=input_bam
           )
         )
+
+def fastq(
+        input,
+        output=None,
+        options=None,
+        ini_section='samtools'
+):
+    return Job(
+        [input],
+        [output],
+        [
+                [ini_section, 'module_samtools'],
+        ],
+        command="""\
+samtools fastq {options} \\
+  {input} {output}""".format(
+      options=options if options else "",
+      input=input,
+      output="> " + output if output else ""
+      )
+  )
+
 
 def quickcheck(
         input,
