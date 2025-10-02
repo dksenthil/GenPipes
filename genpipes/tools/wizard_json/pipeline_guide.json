@@ -111,19 +111,19 @@
         {
             "id": "3_rnaseq_question",
             "type": "confirm",
-            "question": "Did your dataset originate from a well-annotated reference genome?",
+            "question": "Did your dataset originate from a species with a well-annotated reference genome?",
             "options": [
                 {
                     "label": "Yes",
+                    "next": "2_rnaseq_question"
+                },
+                {
+                    "label": "No",
                     "next": {
                         "external": "general_guide.json",
                         "entryPoint": "rnaseq_denovo_assembly_pipeline_selected"
                         
                     }
-                },
-                {
-                    "label": "No",
-                    "next": "2_rnaseq_question"
                 }
             ]
         },
