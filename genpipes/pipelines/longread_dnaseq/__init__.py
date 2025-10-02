@@ -72,7 +72,9 @@ LongRead DNA-Seq Pipeline
 ==============
 
 The LongRead Pipeline is used to analyse long reads produced by the Oxford Nanopore Technologies (ONT) 
-and PacBio Revio sequencers. The protocols used are nanopore and revio, respectively.
+and PacBio Revio sequencers. The protocols used are nanopore and revio, respectively. For nanopore reads, 
+there is now an additional protocol called nanopore_paired_somatic that is used to analyze data from a matched 
+tumor-normal pair. 
 
 Currently, the nanopore protocol of the pipeline uses minimap2 to align reads to the reference genome.
 Additionally, it produces a QC report that includes an interactive dashboard with data from the basecalling
@@ -80,20 +82,27 @@ summary file as well as the alignment. A step aligning random reads to the NCBI 
 the species of the highest hits is also done as QC.
 
 Once the QC and alignments have been produced, Picard is used to merge readsets coming from the same
-sample. Finally, SVIM is used to detect Structural Variants (SV) including deletions, insertions and
-translocations. For a full summary of the types of SVs detected, please consult the following [site](
-https://github.com/eldariont/svim#background-on-structural-variants-and-long-reads).
+sample. Nanoplot and Mosdepth provide metrics at the sample level. Variant calling is performed by Clair3 and 
+results are phased with Whatshap. Dysgu and SVIM are used to detect Structural Variants (SV) including deletions, 
+insertions and translocations. For a full summary of the types of SVs detected by SVIM, please consult the 
+following [site](https://github.com/eldariont/svim#background-on-structural-variants-and-long-reads).
 
-The SV calls produced by SVIM are saved as VCFs for each sample, which can then be used in downstream
-analyses. No filtering is performed on the SV calls.
+The SV calls produced by SVIM and Dysgu are saved as VCFs for each sample, which can then be used in downstream
+analyses. No filtering is performed on the SV calls from SVIM.
+
+For epigenomic datasets, Modkit can be run as an optional final step. 
 
 This pipeline currently does not perform base calling and requires both FASTQ and a sequencing_summary
 file produced by a ONT supported basecaller (we recommend Guppy). Additionally, the testing and
 development of the pipeline were focused on genomics applications, and functionality has not been tested
-for transcriptomics or epigenomics datasets.
+for transcriptomics datasets.
 
 For more information on using ONT data for structural variant detection, as well as an alternative
 approach, please consult [this GitHub repository](https://github.com/nanoporetech/pipeline-structural-variation).
+
+For the nanopore_paired_somatic protocol, alignment and metrics generation follow the same steps for both the normal 
+and the tumor sample. Variant calling for each sample is done with ClairS, followed by detection of somatic structural 
+variants with SAVANA. Finally, CPSR and PCGR reports are created for germline and somatic variants, respectively. 
 
 The Revio protocol uses pbmm2 to align reads to the reference genome, followed by variant calling with DeepVariant
 and structural variant calling with HiFiCNV, TRGT, and Sawfish. Variants are annotated with AnnotSV and phased
