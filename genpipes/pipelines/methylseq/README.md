@@ -3,8 +3,7 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [Methyl-Seq Pipeline](#methyl-seq-pipeline)
-  - [The pipeline is designed to be run on a cluster and is configured using a configuration file. The pipeline can be run in a single step or in multiple steps. The pipeline can also be run in parallel to process multiple samples simultaneously.
-Usage](#the-pipeline-is-designed-to-be-run-on-a-cluster-and-is-configured-using-a-configuration-file-the-pipeline-can-be-run-in-a-single-step-or-in-multiple-steps-the-pipeline-can-also-be-run-in-parallel-to-process-multiple-samples-simultaneously%0Ausage)
+  - [Usage](#usage)
   - [picard_sam_to_fastq](#picard_sam_to_fastq)
   - [trimmomatic](#trimmomatic)
   - [merge_trimmomatic_stats](#merge_trimmomatic_stats)
@@ -37,7 +36,6 @@ Usage](#the-pipeline-is-designed-to-be-run-on-a-cluster-and-is-configured-using-
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-[TOC]
 
 Methyl-Seq Pipeline
 ================
@@ -61,20 +59,20 @@ However, if you would like to setup and use dragen in own cluster please refer t
 A pipeline for processing and analyzing bisulfite sequencing data. The pipeline uses Bismark to align reads and extract methylation information, and Picard to remove duplicates, add read groups and index the BAM files. The pipeline also computes metrics and generates coverage tracks per sample. The pipeline currently supports the following protocols: bismark, hybrid and dragen.
 
 The pipeline is designed to be run on a cluster and is configured using a configuration file. The pipeline can be run in a single step or in multiple steps. The pipeline can also be run in parallel to process multiple samples simultaneously.
+
 Usage
 -----
 
-```
-#!text
-usage: genpipes methylseq [-h] [--clean] -c CONFIG [CONFIG ...]
-                          [--container {wrapper, singularity} <IMAGE PATH>]
-                          [-f] [--force_mem_per_cpu FORCE_MEM_PER_CPU]
-                          [--genpipes_file GENPIPES_FILE]
-                          [-j {pbs,batch,daemon,slurm}] [--json-pt]
-                          [-l {debug,info,warning,error,critical}]
-                          [-o OUTPUT_DIR] [--sanity-check] [-s STEPS]
-                          [--wrap [WRAP]] -r READSETS_FILE [-d DESIGN_FILE]
-                          [-v] [-t {bismark,gembs,hybrid,dragen}]
+```text
+usage: genpipes ampliconseq [-h] [--clean] -c CONFIG [CONFIG ...]
+                            [--container {wrapper, singularity} <IMAGE PATH>]
+                            [-f] [--force_mem_per_cpu FORCE_MEM_PER_CPU]
+                            [--genpipes_file GENPIPES_FILE]
+                            [-j {pbs,batch,daemon,slurm}] [--json-pt]
+                            [-l {debug,info,warning,error,critical}]
+                            [-o OUTPUT_DIR] [--sanity-check] [-s STEPS]
+                            [--wrap [WRAP]] -r READSETS_FILE [-d DESIGN_FILE]
+                            [-v]
 
 For more documentation, visit our website: https://genpipes.readthedocs.io
 
@@ -123,8 +121,6 @@ options:
   -d, --design DESIGN_FILE
                         design file
   -v, --version         show the version information and exit
-  -t, --type {bismark,gembs,hybrid,dragen}
-                        Type of pipeline (default bismark)
 
 Steps:
 

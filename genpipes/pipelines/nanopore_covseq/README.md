@@ -20,28 +20,26 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-[TOC]
 
 Nanopore CoVSeq Pipeline
 ==============
 
 For information on the structure and contents of the LongRead readset file used for this pipeline, please consult [here](https://genpipes.readthedocs.io/en/latest/get-started/concepts/readset_file.html#readset-file).
     
+
 Usage
 -----
 
-```
-#!text
-usage: genpipes nanopore_covseq [-h] [--clean] -c CONFIG [CONFIG ...]
-                                [--container {wrapper, singularity} <IMAGE PATH>]
-                                [-f] [--force_mem_per_cpu FORCE_MEM_PER_CPU]
-                                [--genpipes_file GENPIPES_FILE]
-                                [-j {pbs,batch,daemon,slurm}] [--json-pt]
-                                [-l {debug,info,warning,error,critical}]
-                                [-o OUTPUT_DIR] [--sanity-check] [-s STEPS]
-                                [--wrap [WRAP]] -r READSETS_FILE
-                                [-d DESIGN_FILE] [-v]
-                                [-t {default,basecalling}]
+```text
+usage: genpipes ampliconseq [-h] [--clean] -c CONFIG [CONFIG ...]
+                            [--container {wrapper, singularity} <IMAGE PATH>]
+                            [-f] [--force_mem_per_cpu FORCE_MEM_PER_CPU]
+                            [--genpipes_file GENPIPES_FILE]
+                            [-j {pbs,batch,daemon,slurm}] [--json-pt]
+                            [-l {debug,info,warning,error,critical}]
+                            [-o OUTPUT_DIR] [--sanity-check] [-s STEPS]
+                            [--wrap [WRAP]] -r READSETS_FILE [-d DESIGN_FILE]
+                            [-v]
 
 For more documentation, visit our website: https://genpipes.readthedocs.io
 
@@ -90,9 +88,6 @@ options:
   -d, --design DESIGN_FILE
                         design file
   -v, --version         show the version information and exit
-  -t, --type {default,basecalling}
-                        Type of CoVSeQ analysis,basecalling on/off (default
-                        without basecalling)
 
 Steps:
 

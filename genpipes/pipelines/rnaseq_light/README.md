@@ -15,7 +15,6 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-[TOC]
 
 RNA-Seq Light Pipeline
 ================
@@ -24,20 +23,20 @@ The RNA-Seq Light Pipeline is a lightweight analysis of gene expression in RNA s
 The pipeline is based on [Kallisto](https://pachterlab.github.io/kallisto/about.html) and differential expression analysis is performed by [Sleuth](http://pachterlab.github.io/sleuth/).
 It is especially useful for quick Quality Control (QC) in gene sequencing studies.
     
+
 Usage
 -----
 
-```
-#!text
-usage: genpipes rnaseq_light [-h] [--clean] -c CONFIG [CONFIG ...]
-                             [--container {wrapper, singularity} <IMAGE PATH>]
-                             [-f] [--force_mem_per_cpu FORCE_MEM_PER_CPU]
-                             [--genpipes_file GENPIPES_FILE]
-                             [-j {pbs,batch,daemon,slurm}] [--json-pt]
-                             [-l {debug,info,warning,error,critical}]
-                             [-o OUTPUT_DIR] [--sanity-check] [-s STEPS]
-                             [--wrap [WRAP]] -r READSETS_FILE [-d DESIGN_FILE]
-                             [-v]
+```text
+usage: genpipes ampliconseq [-h] [--clean] -c CONFIG [CONFIG ...]
+                            [--container {wrapper, singularity} <IMAGE PATH>]
+                            [-f] [--force_mem_per_cpu FORCE_MEM_PER_CPU]
+                            [--genpipes_file GENPIPES_FILE]
+                            [-j {pbs,batch,daemon,slurm}] [--json-pt]
+                            [-l {debug,info,warning,error,critical}]
+                            [-o OUTPUT_DIR] [--sanity-check] [-s STEPS]
+                            [--wrap [WRAP]] -r READSETS_FILE [-d DESIGN_FILE]
+                            [-v]
 
 For more documentation, visit our website: https://genpipes.readthedocs.io
 

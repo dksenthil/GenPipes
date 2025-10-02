@@ -29,6 +29,7 @@ _shtab_genpipes_tools_commands() {
     "log_report:"
     "submit_genpipes:"
     "validate_genpipes:"
+    "wizard:"
   )
   _describe 'genpipes tools commands' _commands
 }
@@ -146,7 +147,8 @@ Default is genpipes\/ressources\/container\/bin\/container_wrapper.sh. This is a
   {-r,--readsets}"[readset file]:readsets_file:_files"
   {-d,--design}"[design file]:design_file:_files"
   "(- : *)"{-v,--version}"[show the version information and exit]"
-  {-t,--type}"[Type of pipeline (default nanopore)]:protocol:(nanopore revio)"
+  {-t,--type}"[Type of protocol (default nanopore)]:protocol:(nanopore nanopore_paired_somatic revio)"
+  {-p,--pairs}"[pairs file]:pairs:_files"
 )
 
 _shtab_genpipes_methylseq_options=(
@@ -318,6 +320,10 @@ _shtab_genpipes_tools_validate_genpipes_options=(
   {-p,--pipeline}"[Pipeline name to validate against]:pipeline:(ampliconseq chipseq covseq dnaseq methylseq longread_dnaseq nanopore_covseq rnaseq rnaseq_denovo_assembly rnaseq_light)"
 )
 
+_shtab_genpipes_tools_wizard_options=(
+  "(- : *)"{-h,--help}"[show this help message and exit]"
+)
+
 
 _shtab_genpipes() {
   local context state line curcontext="$curcontext" one_or_more='(-)*' remainder='(*)'
@@ -369,6 +375,7 @@ _shtab_genpipes_tools() {
         log_report) _arguments -C -s $_shtab_genpipes_tools_log_report_options ;;
         submit_genpipes) _arguments -C -s $_shtab_genpipes_tools_submit_genpipes_options ;;
         validate_genpipes) _arguments -C -s $_shtab_genpipes_tools_validate_genpipes_options ;;
+        wizard) _arguments -C -s $_shtab_genpipes_tools_wizard_options ;;
       esac
   esac
 }

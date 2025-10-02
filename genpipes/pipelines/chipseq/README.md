@@ -3,8 +3,7 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [ChIP-Seq Pipeline](#chip-seq-pipeline)
-  - [The pipeline is designed to be run on a cluster and is configured using a configuration file. The pipeline can be run in a single step or in multiple steps. The pipeline can also be run in parallel to process multiple samples simultaneously.
-Usage](#the-pipeline-is-designed-to-be-run-on-a-cluster-and-is-configured-using-a-configuration-file-the-pipeline-can-be-run-in-a-single-step-or-in-multiple-steps-the-pipeline-can-also-be-run-in-parallel-to-process-multiple-samples-simultaneously%0Ausage)
+  - [Usage](#usage)
   - [picard_sam_to_fastq](#picard_sam_to_fastq)
   - [trimmomatic](#trimmomatic)
   - [merge_trimmomatic_stats](#merge_trimmomatic_stats)
@@ -33,7 +32,6 @@ Usage](#the-pipeline-is-designed-to-be-run-on-a-cluster-and-is-configured-using-
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-[TOC]
 
 ChIP-Seq Pipeline
 =================
@@ -43,20 +41,20 @@ A pipeline to process ChIP-seq data. The pipeline is designed to handle both pai
 The pipeline takes as input a readset file and a design file. The readset file contains the list of samples and readsets, while the design file contains the list of contrasts to be analyzed. The pipeline outputs BAM files, peak calls, and differential binding results. The pipeline also generates quality metrics and reports for each sample.
 
 The pipeline is designed to be run on a cluster and is configured using a configuration file. The pipeline can be run in a single step or in multiple steps. The pipeline can also be run in parallel to process multiple samples simultaneously.
+
 Usage
 -----
 
-```
-#!text
-usage: genpipes chipseq [-h] [--clean] -c CONFIG [CONFIG ...]
-                        [--container {wrapper, singularity} <IMAGE PATH>] [-f]
-                        [--force_mem_per_cpu FORCE_MEM_PER_CPU]
-                        [--genpipes_file GENPIPES_FILE]
-                        [-j {pbs,batch,daemon,slurm}] [--json-pt]
-                        [-l {debug,info,warning,error,critical}]
-                        [-o OUTPUT_DIR] [--sanity-check] [-s STEPS]
-                        [--wrap [WRAP]] -r READSETS_FILE [-d DESIGN_FILE] [-v]
-                        [-t {chipseq,atacseq}]
+```text
+usage: genpipes ampliconseq [-h] [--clean] -c CONFIG [CONFIG ...]
+                            [--container {wrapper, singularity} <IMAGE PATH>]
+                            [-f] [--force_mem_per_cpu FORCE_MEM_PER_CPU]
+                            [--genpipes_file GENPIPES_FILE]
+                            [-j {pbs,batch,daemon,slurm}] [--json-pt]
+                            [-l {debug,info,warning,error,critical}]
+                            [-o OUTPUT_DIR] [--sanity-check] [-s STEPS]
+                            [--wrap [WRAP]] -r READSETS_FILE [-d DESIGN_FILE]
+                            [-v]
 
 For more documentation, visit our website: https://genpipes.readthedocs.io
 
@@ -105,8 +103,6 @@ options:
   -d, --design DESIGN_FILE
                         design file
   -v, --version         show the version information and exit
-  -t, --type {chipseq,atacseq}
-                        Type of pipeline (default chipseq)
 
 Steps:
 
@@ -148,18 +144,19 @@ Protocol atacseq
 9 metrics
 10 homer_make_tag_directory
 11 qc_metrics
-12 homer_make_ucsc_file
-13 macs2_atacseq_callpeak
-14 homer_annotate_peaks
-15 homer_find_motifs_genome
-16 annotation_graphs
-17 run_spp
-18 differential_binding
-19 ihec_metrics
-20 multiqc_report
-21 cram_output
-22 gatk_haplotype_caller
-23 merge_and_call_individual_gvcf
+12 deeptools_qc
+13 homer_make_ucsc_file
+14 macs2_atacseq_callpeak
+15 homer_annotate_peaks
+16 homer_find_motifs_genome
+17 annotation_graphs
+18 run_spp
+19 differential_binding
+20 ihec_metrics
+21 multiqc_report
+22 cram_output
+23 gatk_haplotype_caller
+24 merge_and_call_individual_gvcf
 ```
 
 picard_sam_to_fastq 

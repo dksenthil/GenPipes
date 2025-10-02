@@ -3,8 +3,7 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [Amplicon-Seq Pipeline](#amplicon-seq-pipeline)
-  - [The pipeline is designed to be run on a cluster and is configured using a configuration file. The pipeline can be run in a single step or in multiple steps. The pipeline can also be run in parallel to process multiple samples simultaneously.
-Usage](#the-pipeline-is-designed-to-be-run-on-a-cluster-and-is-configured-using-a-configuration-file-the-pipeline-can-be-run-in-a-single-step-or-in-multiple-steps-the-pipeline-can-also-be-run-in-parallel-to-process-multiple-samples-simultaneously%0Ausage)
+  - [Usage](#usage)
   - [trimmomatic16S](#trimmomatic16s)
   - [merge_trimmomatic_stats16S](#merge_trimmomatic_stats16s)
   - [flash_pass1](#flash_pass1)
@@ -16,7 +15,6 @@ Usage](#the-pipeline-is-designed-to-be-run-on-a-cluster-and-is-configured-using-
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-[TOC]
 
 Amplicon-Seq Pipeline
 =================
@@ -24,11 +22,11 @@ Amplicon-Seq Pipeline
 A pipeline to process amplicon sequencing data. The pipeline is designed to handle both paired-end and single-end reads and can be used to process data from any Illumina sequencer. The pipeline uses Trimmomatic to trim adapters and primers, FLASh to merge paired-end reads, and DADA2 to infer sequence variants of microbial communities.
 
 The pipeline is designed to be run on a cluster and is configured using a configuration file. The pipeline can be run in a single step or in multiple steps. The pipeline can also be run in parallel to process multiple samples simultaneously.
+
 Usage
 -----
 
-```
-#!text
+```text
 usage: genpipes ampliconseq [-h] [--clean] -c CONFIG [CONFIG ...]
                             [--container {wrapper, singularity} <IMAGE PATH>]
                             [-f] [--force_mem_per_cpu FORCE_MEM_PER_CPU]
