@@ -35,7 +35,6 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-[TOC]
 
 RNA-Seq De Novo Assembly Pipeline
 =================================
@@ -97,23 +96,20 @@ summary statistics are included in the report and can be explored interactively.
 The Seq2Fun De Novo Assembly pipeline, selected using the "-t seq2fun" parameter directly starts with Seq2Fun
 software suit from fastq files.
     
+
 Usage
 -----
 
-```
-#!text
-usage: genpipes rnaseq_denovo_assembly [-h] [--clean] -c CONFIG [CONFIG ...]
-                                       [--container {wrapper, singularity} <IMAGE PATH>]
-                                       [-f]
-                                       [--force_mem_per_cpu FORCE_MEM_PER_CPU]
-                                       [--genpipes_file GENPIPES_FILE]
-                                       [-j {pbs,batch,daemon,slurm}]
-                                       [--json-pt]
-                                       [-l {debug,info,warning,error,critical}]
-                                       [-o OUTPUT_DIR] [--sanity-check]
-                                       [-s STEPS] [--wrap [WRAP]]
-                                       -r READSETS_FILE [-d DESIGN_FILE] [-v]
-                                       [-t {trinity,seq2fun}] [-b BATCH]
+```text
+usage: genpipes ampliconseq [-h] [--clean] -c CONFIG [CONFIG ...]
+                            [--container {wrapper, singularity} <IMAGE PATH>]
+                            [-f] [--force_mem_per_cpu FORCE_MEM_PER_CPU]
+                            [--genpipes_file GENPIPES_FILE]
+                            [-j {pbs,batch,daemon,slurm}] [--json-pt]
+                            [-l {debug,info,warning,error,critical}]
+                            [-o OUTPUT_DIR] [--sanity-check] [-s STEPS]
+                            [--wrap [WRAP]] -r READSETS_FILE [-d DESIGN_FILE]
+                            [-v]
 
 For more documentation, visit our website: https://genpipes.readthedocs.io
 
@@ -162,9 +158,6 @@ options:
   -d, --design DESIGN_FILE
                         design file
   -v, --version         show the version information and exit
-  -t, --type {trinity,seq2fun}
-                        RNAseq analysis type
-  -b, --batch BATCH     batch file (to peform batch effect correction
 
 Steps:
 

@@ -49,7 +49,6 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-[TOC]
 
 RNA-Seq Pipeline
 ================
@@ -85,20 +84,20 @@ are related to detection and annotation of gene fusions. For that, [Star-fusion]
 used. Furthermore, [RSeQC](http://rseqc.sourceforge.net/) provides RNA-seq quality control metrics to asses the
 quality of the data.
     
+
 Usage
 -----
 
-```
-#!text
-usage: genpipes rnaseq [-h] [--clean] -c CONFIG [CONFIG ...]
-                       [--container {wrapper, singularity} <IMAGE PATH>] [-f]
-                       [--force_mem_per_cpu FORCE_MEM_PER_CPU]
-                       [--genpipes_file GENPIPES_FILE]
-                       [-j {pbs,batch,daemon,slurm}] [--json-pt]
-                       [-l {debug,info,warning,error,critical}]
-                       [-o OUTPUT_DIR] [--sanity-check] [-s STEPS]
-                       [--wrap [WRAP]] -r READSETS_FILE [-d DESIGN_FILE] [-v]
-                       [-t {stringtie,variants,cancer}] [-b BATCH]
+```text
+usage: genpipes ampliconseq [-h] [--clean] -c CONFIG [CONFIG ...]
+                            [--container {wrapper, singularity} <IMAGE PATH>]
+                            [-f] [--force_mem_per_cpu FORCE_MEM_PER_CPU]
+                            [--genpipes_file GENPIPES_FILE]
+                            [-j {pbs,batch,daemon,slurm}] [--json-pt]
+                            [-l {debug,info,warning,error,critical}]
+                            [-o OUTPUT_DIR] [--sanity-check] [-s STEPS]
+                            [--wrap [WRAP]] -r READSETS_FILE [-d DESIGN_FILE]
+                            [-v]
 
 For more documentation, visit our website: https://genpipes.readthedocs.io
 
@@ -147,9 +146,6 @@ options:
   -d, --design DESIGN_FILE
                         design file
   -v, --version         show the version information and exit
-  -t, --type {stringtie,variants,cancer}
-                        RNAseq analysis type
-  -b, --batch BATCH     batch file (to peform batch effect correction
 
 Steps:
 

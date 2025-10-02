@@ -73,8 +73,10 @@ complete genpipes \
         'n/--readsets/f/' \
         'n/-d/f/' \
         'n/--design/f/' \
-        'n/-t/(nanopore revio)/' \
-        'n/--type/(nanopore revio)/' \
+        'n/-t/(nanopore nanopore_paired_somatic revio)/' \
+        'n/--type/(nanopore nanopore_paired_somatic revio)/' \
+        'n/-p/f/' \
+        'n/--pairs/f/' \
         'n/-c/f/' \
         'n/--config/f/' \
         'n/-j/(pbs batch daemon slurm)/' \
@@ -148,5 +150,5 @@ complete genpipes \
         'n/-d/f/' \
         'n/--design/f/' \
         'p/1/(ampliconseq chipseq covseq dnaseq longread_dnaseq methylseq nanopore_covseq rnaseq rnaseq_denovo_assembly rnaseq_light tools)/' \
-        'p/2/(chunk_genpipes csvToreadset job2json_project_tracking log_report submit_genpipes get_wrapper validate_genpipes)/' \
+        'p/2/(chunk_genpipes csvToreadset job2json_project_tracking log_report submit_genpipes get_wrapper validate_genpipes wizard)/' \
         'p/*/()/'

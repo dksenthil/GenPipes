@@ -3,8 +3,7 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [DNA-Seq Pipeline](#dna-seq-pipeline)
-  - [The pipeline is designed to be run on a cluster and is configured using a configuration file. The pipeline can be run in a single step or in multiple steps. The pipeline can also be run in parallel to process multiple samples simultaneously.
-Usage](#the-pipeline-is-designed-to-be-run-on-a-cluster-and-is-configured-using-a-configuration-file-the-pipeline-can-be-run-in-a-single-step-or-in-multiple-steps-the-pipeline-can-also-be-run-in-parallel-to-process-multiple-samples-simultaneously%0Ausage)
+  - [Usage](#usage)
   - [gatk_sam_to_fastq](#gatk_sam_to_fastq)
   - [trim_fastp](#trim_fastp)
   - [bwa_mem2_samtools_sort](#bwa_mem2_samtools_sort)
@@ -91,7 +90,6 @@ Usage](#the-pipeline-is-designed-to-be-run-on-a-cluster-and-is-configured-using-
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-[TOC]
 
 DNA-Seq Pipeline
 ================
@@ -101,21 +99,20 @@ A pipeline to process DNA sequencing data. The pipeline uses Trimmomatic for qua
 The pipeline contains protocols for processing both germline and somatic sequencing data; high-coverage data from targeted sequencing experiments; SNVs and structural variants.
 
 The pipeline is designed to be run on a cluster and is configured using a configuration file. The pipeline can be run in a single step or in multiple steps. The pipeline can also be run in parallel to process multiple samples simultaneously.
+
 Usage
 -----
 
-```
-#!text
-usage: genpipes dnaseq [-h] [--clean] -c CONFIG [CONFIG ...]
-                       [--container {wrapper, singularity} <IMAGE PATH>] [-f]
-                       [--force_mem_per_cpu FORCE_MEM_PER_CPU]
-                       [--genpipes_file GENPIPES_FILE]
-                       [-j {pbs,batch,daemon,slurm}] [--json-pt]
-                       [-l {debug,info,warning,error,critical}]
-                       [-o OUTPUT_DIR] [--sanity-check] [-s STEPS]
-                       [--wrap [WRAP]] -r READSETS_FILE [-d DESIGN_FILE] [-v]
-                       [-p PAIRS] [--profyle]
-                       [-t {germline_snv,germline_sv,germline_high_cov,somatic_tumor_only,somatic_fastpass,somatic_ensemble,somatic_sv}]
+```text
+usage: genpipes ampliconseq [-h] [--clean] -c CONFIG [CONFIG ...]
+                            [--container {wrapper, singularity} <IMAGE PATH>]
+                            [-f] [--force_mem_per_cpu FORCE_MEM_PER_CPU]
+                            [--genpipes_file GENPIPES_FILE]
+                            [-j {pbs,batch,daemon,slurm}] [--json-pt]
+                            [-l {debug,info,warning,error,critical}]
+                            [-o OUTPUT_DIR] [--sanity-check] [-s STEPS]
+                            [--wrap [WRAP]] -r READSETS_FILE [-d DESIGN_FILE]
+                            [-v]
 
 For more documentation, visit our website: https://genpipes.readthedocs.io
 
@@ -164,11 +161,6 @@ options:
   -d, --design DESIGN_FILE
                         design file
   -v, --version         show the version information and exit
-  -p, --pairs PAIRS     pairs file
-  --profyle             adjust deliverables to PROFYLE folder conventions
-                        (Default: False)
-  -t, --type {germline_snv,germline_sv,germline_high_cov,somatic_tumor_only,somatic_fastpass,somatic_ensemble,somatic_sv}
-                        DNAseq analysis type
 
 Steps:
 
