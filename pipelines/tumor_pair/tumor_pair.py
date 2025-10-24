@@ -5295,7 +5295,13 @@ echo -e "{normal_name}\\t{tumor_name}" \\
                         os.path.join(pcgr_directory, tumor_pair.name[:35] + ".pcgr_acmg." + assembly + ".flexdb.html"),
                         os.path.join(pcgr_directory, tumor_pair.name[:35] + ".pcgr_acmg." + assembly + ".maf"),
                         os.path.join(pcgr_directory, tumor_pair.name[:35] + ".pcgr_acmg." + assembly + ".snvs_indels.tiers.tsv"),
-                        os.path.join(pcgr_directory, tumor_pair.name[:35] + ".pcgr_acmg." + assembly + ".cna_segments.tsv.gz")
+                        os.path.join(pcgr_directory, tumor_pair.name[:35] + ".pcgr_acmg." + assembly + ".cna_segments.tsv.gz"),
+                        os.path.join(pcgr_directory, tumor_pair.name[:35] + ".pcgr_acmg." + assembly + ".pass.raw.tsv.gz"),
+                        os.path.join(pcgr_directory, tumor_pair.name[:35] + ".pcgr_acmg." + assembly + ".pass.tsv.gz"),
+                        os.path.join(pcgr_directory, tumor_pair.name[:35] + ".pcgr_acmg." + assembly + ".pass.vcf.gz"),
+                        os.path.join(pcgr_directory, tumor_pair.name[:35] + ".pcgr_acmg." + assembly + ".pass.vcf.gz.tbi"),
+                        os.path.join(pcgr_directory, tumor_pair.name[:35] + ".pcgr_acmg." + assembly + ".vcf.gz"),
+                        os.path.join(pcgr_directory, tumor_pair.name[:35] + ".pcgr_acmg." + assembly + ".vcf.gz.tbi")
                     ]
                 final_command = concat_jobs(
                         [
@@ -5318,6 +5324,36 @@ echo -e "{normal_name}\\t{tumor_name}" \\
                                 os.path.relpath(output[3], pcgr_directory),
                                 os.path.join(pcgr_directory, tumor_pair.name + ".pcgr_acmg." + assembly + ".cna_segments.tsv.gz"),
                                 input=output[3]
+                                ),
+                            bash.ln(
+                                os.path.relpath(output[4], pcgr_directory),
+                                os.path.join(pcgr_directory, tumor_pair.name + ".pcgr_acmg." + assembly + ".pass.raw.tsv.gz"),
+                                input=output[4]
+                                ),
+                            bash.ln(
+                                os.path.relpath(output[5], pcgr_directory),
+                                os.path.join(pcgr_directory, tumor_pair.name + ".pcgr_acmg." + assembly + ".pass.tsv.gz"),
+                                input=output[5]
+                                ),
+                            bash.ln(
+                                os.path.relpath(output[6], pcgr_directory),
+                                os.path.join(pcgr_directory, tumor_pair.name + ".pcgr_acmg." + assembly + ".pass.vcf.gz"),
+                                input=output[6]
+                                ),
+                            bash.ln(
+                                os.path.relpath(output[7], pcgr_directory),
+                                os.path.join(pcgr_directory, tumor_pair.name + ".pcgr_acmg." + assembly + ".pass.vcf.gz.tbi"),
+                                input=output[7]
+                                ),
+                            bash.ln(
+                                os.path.relpath(output[8], pcgr_directory),
+                                os.path.join(pcgr_directory, tumor_pair.name + ".pcgr_acmg." + assembly + ".vcf.gz"),
+                                input=output[8]
+                                ),
+                            bash.ln(
+                                os.path.relpath(output[9], pcgr_directory),
+                                os.path.join(pcgr_directory, tumor_pair.name + ".pcgr_acmg." + assembly + ".vcf.gz.tbi"),
+                                input=output[9]
                                 )
                             ]
                         )
@@ -5326,7 +5362,13 @@ echo -e "{normal_name}\\t{tumor_name}" \\
                         os.path.join(pcgr_directory, tumor_pair.name + ".pcgr_acmg." + assembly + ".flexdb.html"),
                         os.path.join(pcgr_directory, tumor_pair.name + ".pcgr_acmg." + assembly + ".maf"),
                         os.path.join(pcgr_directory, tumor_pair.name + ".pcgr_acmg." + assembly + ".snvs_indels.tiers.tsv"),
-                        os.path.join(pcgr_directory, tumor_pair.name + ".pcgr_acmg." + assembly + ".cna_segments.tsv.gz")
+                        os.path.join(pcgr_directory, tumor_pair.name + ".pcgr_acmg." + assembly + ".cna_segments.tsv.gz"),
+                        os.path.join(pcgr_directory, tumor_pair.name + ".pcgr_acmg." + assembly + ".pass.raw.tsv.gz"),
+                        os.path.join(pcgr_directory, tumor_pair.name + ".pcgr_acmg." + assembly + ".pass.tsv.gz"),
+                        os.path.join(pcgr_directory, tumor_pair.name + ".pcgr_acmg." + assembly + ".pass.vcf.gz"),
+                        os.path.join(pcgr_directory, tumor_pair.name + ".pcgr_acmg." + assembly + ".pass.vcf.gz.tbi"),
+                        os.path.join(pcgr_directory, tumor_pair.name + ".pcgr_acmg." + assembly + ".vcf.gz"),
+                        os.path.join(pcgr_directory, tumor_pair.name + ".pcgr_acmg." + assembly + ".vcf.gz.tbi")
                     ]
                 final_command = bash.ls(output[0])
             job_name = f"report_pcgr.{tumor_pair.name}"
