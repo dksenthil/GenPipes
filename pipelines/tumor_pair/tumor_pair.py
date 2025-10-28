@@ -5409,7 +5409,7 @@ echo -e "{normal_name}\\t{tumor_name}" \\
                 name=job_name,
                 samples=[tumor_pair.normal, tumor_pair.tumor],
                 readsets=[*list(tumor_pair.normal.readsets), *list(tumor_pair.tumor.readsets)],
-                input_dependency=[header, input, input_cna, input_cpsr, output_cna_body],
+                input_dependency=[input, input_cna, input_cpsr],
                 output_dependency=[header, output_cna_body, output_cna, pcgr_zip] + output
             )
 
@@ -5432,7 +5432,7 @@ echo -e "{normal_name}\\t{tumor_name}" \\
                         name=job_name,
                         samples=[tumor_pair.normal, tumor_pair.tumor],
                         readsets=[*list(tumor_pair.normal.readsets), *list(tumor_pair.tumor.readsets)],
-                        input_dependency=[header, input, input_cna, input_cpsr, output_cna_body],
+                        input_dependency=[input, input_cna, input_cpsr],
                         output_dependency=[header, output_cna_body, output_cna] + output
                     )
                 )
