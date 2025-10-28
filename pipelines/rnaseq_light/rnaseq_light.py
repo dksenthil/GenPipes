@@ -77,7 +77,7 @@ class RnaSeqLight(rnaseq.RnaSeqRaw):
         transcriptome_file = config.param('kallisto', 'transcriptome_idx', param_type="filepath")
         tx2genes_file = config.param('kallisto', 'transcript2genes', param_type="filepath")
         bootstraps = config.param('kallisto', 'bootstraps')
-        other_param = config.param('kallisto', 'other_options', required=False)
+        other_param = config.param('kallisto', 'other_parameters', required=False)
 
         jobs = []
 
