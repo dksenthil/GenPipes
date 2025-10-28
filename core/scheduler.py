@@ -364,6 +364,7 @@ module load {module_python}
   -o \\"{json_outfile}\\" \\
   -f {status}
 export PT_JSON_OUTFILE=\\"{json_outfile}\\"
+export TIMESTAMP=\\"{timestamp}\\"
 module unload {module_python} {command_separator}
 """.format(
             module_python=config.param('DEFAULT', 'module_python'),
@@ -373,6 +374,7 @@ module unload {module_python} {command_separator}
             job_name=job.name,
             metrics=('\n  -m \\"' + ','.join(job.metrics) + '\\" \\') if job.metrics else '',
             json_outfile=json_outfile,
+            timestamp=timestamp,
             status=job_status,
             command_separator="&&" if (job_status=='\\"RUNNING\\"') else ""
         ) if json_outfile else ""
