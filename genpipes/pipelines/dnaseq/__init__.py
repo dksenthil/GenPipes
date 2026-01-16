@@ -372,12 +372,9 @@ Parameters:
                             sample=i,
                             profyle=self.profyle
                         )
-                        dir_name, file_name = os.path.split(symlink_pair_job.output_files[0])
                         # do not compute md5sum in the readset input directory
-                        md5sum_job = deliverables.md5sum(
-                            symlink_pair_job.output_files[0],
-                            f"{file_name}.md5",
-                            dir_name
+                        md5sum_job = bash.md5sum(
+                            symlink_pair_job.output_files[0]
                         )
                         jobs.append(
                             concat_jobs(
