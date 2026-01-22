@@ -4295,7 +4295,7 @@ echo -e "{normal_name}\\t{tumor_name}" \\
                                 ],
                                 name="vardict_paired." + tumor_pair.name + "." + str(idx),
                                 samples=[tumor_pair.normal, tumor_pair.tumor],
-                                readsets=[*list(tumor_pair.normal.readsets), *list(tumor_pair.tumor.readsets)]
+                                readsets=[*list(tumor_pair.normal.readsets), *list(tumor_pair.tumor.readsets)],
                                 output_dependency=[output, f"{output}.tbi"]
                             )
                         )
