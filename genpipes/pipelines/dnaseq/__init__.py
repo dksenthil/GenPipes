@@ -3009,7 +3009,9 @@ END
                 pcgr_directory = os.path.join(djerba_dir, "pcgr")
                 input_maf = os.path.join(pcgr_directory, tumor_pair.name + ".pcgr_acmg." + assembly + ".maf")
                 clean_maf =  os.path.join(pcgr_directory, tumor_pair.name + ".pcgr_acmg." + assembly + ".clean.maf") # MAF from pcgr version 1.4.1 required, remove any empty t_depth lines, needs to be gzipped
-            
+                msi_input = os.path.join(djerba_dir, "example_genomic_landscape_inputs", "PLACEHOLDER.filter.deduped.realigned.recalibrated.msi.booted")
+                tmb_input = os.path.join(djerba_dir, "example_genomic_landscape_inputs", "SNP.count.txt")            
+
                 config_file = os.path.join(djerba_dir, tumor_pair.name + ".djerba.ini")
                 djerba_script = os.path.join(djerba_dir, "djerba_report." + tumor_pair.name + ".sh")
 
@@ -3040,7 +3042,9 @@ END
                                 tumor_pair.tumor.name,
                                 tumor_pair.normal.name,
                                 clean_maf + ".gz",
-                                purple_zip
+                                purple_zip,
+                                msi_input,
+                                tmb_input
                                 ),
                             # djerba report requires internet connection. Script is produced but must be executed locally.
                             djerba.make_script(
