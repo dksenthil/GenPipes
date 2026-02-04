@@ -2845,6 +2845,7 @@ END
 
         else:
             for tumor_pair in self.tumor_pairs.values():
+                purple_input=None
                 # Set directory, ini_section, job and sample name for tumor pair Fastpass protocol
                 if 'fastpass'  in self.protocol:
                     panel_directory = os.path.join(
@@ -2895,6 +2896,11 @@ END
                         "pcgr"
                     )
 
+                    purple_input = os.path.join(self.output_dirs['paired_variants_directory'], 
+                                                tumor_pair.name,
+                                                "purple",
+                                                f"{tumor_pair.tumor.name}.purple.purity.tsv")
+
                 input_cpsr = os.path.join(
                     cpsr_directory,
                     f"{tumor_pair.name}.cpsr.{assembly}.json.gz"
@@ -2943,6 +2949,7 @@ END
                             pcgr_directory,
                             tumor_pair.name,
                             input_cna=output_cna,
+                            purple_input=purple_input,
                             ini_section=ini_section
                         ),
                         bash.ls(output)
