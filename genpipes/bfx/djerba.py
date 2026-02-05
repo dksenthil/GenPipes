@@ -158,6 +158,22 @@ gzip -f {output_maf}""".format(
         )
     )
 
+def parse_snp_count(
+        input,
+        output
+    ):
+
+    return Job(
+        [input],
+        [output],
+        [],
+        command="""\
+awk 'NR == 2 {{print $2}}' {input} > {output}""".format(
+    input=input,
+    output=output
+    )
+)
+
 def make_script(
         config_file,
         output_dir,
