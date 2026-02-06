@@ -18,21 +18,28 @@
 ################################################################################
 
 # MUGQIC Modules
+import os
 from ..core.job import Job
+
+collapse_annotation_script = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.realpath(__file__))),
+    "tools",
+    "collapse_annotation.py"
+)
 
 def collapse_gtf(input_gtf, output_gtf):
     return Job(
         input_files=[input_gtf],
         output_files=[output_gtf],
         module_entries=[
-            ['gtex_pipeline', 'module_gtex-pipeline'],
             ['gtex_pipeline', 'module_python']
         ],
         command="""\
-        collapse_annotation.py \\
+        python {script} \\
         {input_gtf} \\
         {output_gtf} """.format(
-        	input_gtf=input_gtf,
+            script=collapse_annotation_script,
+            input_gtf=input_gtf,
             output_gtf=output_gtf
         )
     )
